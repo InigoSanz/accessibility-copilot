@@ -4,6 +4,8 @@ import com.inigosanz.backend.domain.model.Project;
 import com.inigosanz.backend.domain.port.out.ProjectRepositoryPort;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ProjectPersistenceAdapter implements ProjectRepositoryPort {
 
@@ -24,5 +26,12 @@ public class ProjectPersistenceAdapter implements ProjectRepositoryPort {
         ProjectEntity savedEntity = jpaProjectRepository.save(entityToSave);
         return projectPersistenceMapper.toDomain(savedEntity);
     }
-}
 
+    @Override
+    public List<Project> findAll() {
+        return jpaProjectRepository.findAll()
+                .stream()
+                .map(projectPersistenceMapper::toDomain)
+                .toList();
+    }
+}

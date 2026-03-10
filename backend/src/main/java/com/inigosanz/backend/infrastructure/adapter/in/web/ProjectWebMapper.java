@@ -3,27 +3,21 @@ package com.inigosanz.backend.infrastructure.adapter.in.web;
 import com.inigosanz.backend.domain.model.Project;
 import com.inigosanz.backend.infrastructure.adapter.in.web.dto.CreateProjectRequest;
 import com.inigosanz.backend.infrastructure.adapter.in.web.dto.ProjectResponse;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
-@Component
-public class ProjectWebMapper {
+@Mapper(componentModel = "spring")
+public interface ProjectWebMapper {
 
-    public Project toDomain(CreateProjectRequest request) {
+    default Project toDomain(CreateProjectRequest request) {
         Objects.requireNonNull(request, "request is required");
         return new Project(null, request.name(), request.rootUrl(), LocalDateTime.now());
     }
 
-    public ProjectResponse toResponse(Project project) {
-        Objects.requireNonNull(project, "project is required");
-        return new ProjectResponse(
-                project.getId(),
-                project.getName(),
-                project.getRootUrl(),
-                project.getCreatedAt()
-        );
-    }
-}
+    ProjectResponse toResponse(Project project);
 
+    List<ProjectResponse> toResponseList(List<Project> projects);
+}
