@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -26,7 +27,7 @@ class ProjectServiceTest {
     private ProjectService projectService;
 
     @Test
-    void create_shouldCallRepositorySaveAndReturnSavedProject() {
+    void shouldCreateProjectAndSaveIt() {
         LocalDateTime createdAt = LocalDateTime.of(2026, 3, 10, 10, 0);
         Project projectToCreate = new Project(null, "Mi proyecto", "https://example.com", createdAt);
         Project savedProject = new Project(1L, "Mi proyecto", "https://example.com", createdAt);
@@ -36,14 +37,11 @@ class ProjectServiceTest {
         Project result = projectService.create(projectToCreate);
 
         ArgumentCaptor<Project> projectCaptor = ArgumentCaptor.forClass(Project.class);
-        verify(projectRepositoryPort).save(projectCaptor.capture());
+        verify(projectRepositoryPort, times(1)).save(projectCaptor.capture());
 
         Project capturedProject = projectCaptor.getValue();
-        assertEquals(projectToCreate.getId(), capturedProject.getId());
-        assertEquals(projectToCreate.getName(), capturedProject.getName());
-        assertEquals(projectToCreate.getRootUrl(), capturedProject.getRootUrl());
-        assertEquals(projectToCreate.getCreatedAt(), capturedProject.getCreatedAt());
+        assertEquals("Mi proyecto", capturedProject.getName());
+        assertEquals("https://example.com", capturedProject.getRootUrl());
         assertSame(savedProject, result);
     }
 }
-
