@@ -1,8 +1,10 @@
 package com.inigosanz.backend.application.service;
 
+import com.inigosanz.backend.domain.model.AccessibilityIssue;
 import com.inigosanz.backend.domain.model.Project;
 import com.inigosanz.backend.domain.model.Scan;
 import com.inigosanz.backend.domain.model.ScanStatus;
+import com.inigosanz.backend.domain.port.out.AccessibilityIssueRepositoryPort;
 import com.inigosanz.backend.domain.port.out.ProjectRepositoryPort;
 import com.inigosanz.backend.domain.port.out.ScanRepositoryPort;
 import com.inigosanz.backend.shared.exception.ProjectNotFoundException;
@@ -23,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,11 +39,14 @@ class ScanServiceTest {
     @Mock
     private ScanRepositoryPort scanRepositoryPort;
 
+    @Mock
+    private AccessibilityIssueRepositoryPort accessibilityIssueRepositoryPort;
+
     @InjectMocks
     private ScanService scanService;
 
     @Test
-    void shouldCreateScanWhenProjectExists() {
+    void shouldCreateScanAndGenerateFakeIssuesWhenProjectExists() {
         Long projectId = 1L;
         Project project = new Project(projectId, "Accessibility Copilot", "https://example.com", LocalDateTime.now());
 
@@ -61,11 +67,22 @@ class ScanServiceTest {
         verify(scanRepositoryPort, times(1)).save(scanCaptor.capture());
         verify(projectRepositoryPort, times(1)).findById(projectId);
 
+        @SuppressWarnings("unchecked")
+        ArgumentCaptor<List<AccessibilityIssue>> issuesCaptor = ArgumentCaptor.forClass(List.class);
+        verify(accessibilityIssueRepositoryPort, times(1)).saveAll(issuesCaptor.capture());
+
         Scan capturedScan = scanCaptor.getValue();
         assertEquals(projectId, capturedScan.getProjectId());
         assertEquals(ScanStatus.COMPLETED, capturedScan.getStatus());
         assertNotNull(capturedScan.getStartedAt());
         assertNotNull(capturedScan.getFinishedAt());
+
+        List<AccessibilityIssue> generatedIssues = issuesCaptor.getValue();
+        assertEquals(3, generatedIssues.size());
+        assertEquals(savedScan.getId(), generatedIssues.get(0).getScanId());
+        assertEquals(savedScan.getId(), generatedIssues.get(1).getScanId());
+        assertEquals(savedScan.getId(), generatedIssues.get(2).getScanId());
+
         assertSame(savedScan, result);
     }
 
@@ -80,6 +97,8 @@ class ScanServiceTest {
         );
 
         verify(projectRepositoryPort, times(1)).findById(projectId);
+        verify(scanRepositoryPort, never()).save(any(Scan.class));
+        verify(accessibilityIssueRepositoryPort, never()).saveAll(any());
         assertEquals("Project not found", exception.getMessage());
     }
 
