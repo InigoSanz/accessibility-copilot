@@ -5,6 +5,7 @@ import com.inigosanz.backend.domain.port.out.ProjectRepositoryPort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ProjectPersistenceAdapter implements ProjectRepositoryPort {
@@ -33,5 +34,11 @@ public class ProjectPersistenceAdapter implements ProjectRepositoryPort {
                 .stream()
                 .map(projectPersistenceMapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public Optional<Project> findById(Long id) {
+        return jpaProjectRepository.findById(id)
+                .map(projectPersistenceMapper::toDomain);
     }
 }

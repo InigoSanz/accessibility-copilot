@@ -2,6 +2,7 @@ package com.inigosanz.backend.application.service;
 
 import com.inigosanz.backend.domain.model.Project;
 import com.inigosanz.backend.domain.port.out.ProjectRepositoryPort;
+import com.inigosanz.backend.shared.exception.ProjectNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -10,9 +11,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -43,5 +46,31 @@ class ProjectServiceTest {
         assertEquals("Mi proyecto", capturedProject.getName());
         assertEquals("https://example.com", capturedProject.getRootUrl());
         assertSame(savedProject, result);
+    }
+
+    @Test
+    void shouldReturnProjectWhenFindByIdExists() {
+        LocalDateTime createdAt = LocalDateTime.of(2026, 3, 10, 10, 45, 13, 750_659_300);
+        Project project = new Project(1L, "Accessibility Copilot", "https://example.com", createdAt);
+
+        when(projectRepositoryPort.findById(1L)).thenReturn(Optional.of(project));
+
+        Project result = projectService.findById(1L);
+
+        verify(projectRepositoryPort, times(1)).findById(1L);
+        assertSame(project, result);
+    }
+
+    @Test
+    void shouldThrowProjectNotFoundExceptionWhenFindByIdDoesNotExist() {
+        when(projectRepositoryPort.findById(999L)).thenReturn(Optional.empty());
+
+        ProjectNotFoundException exception = assertThrows(
+                ProjectNotFoundException.class,
+                () -> projectService.findById(999L)
+        );
+
+        verify(projectRepositoryPort, times(1)).findById(999L);
+        assertEquals("Project not found", exception.getMessage());
     }
 }

@@ -2,9 +2,8 @@ package com.inigosanz.backend.domain.port.in;
 
 import com.inigosanz.backend.domain.model.Project;
 
-import java.util.List;
+public interface GetProjectByIdUseCase {
 
-public interface ListProjectsUseCase {
-
-    List<Project> findAll();
+    Project findById(Long id);
 }
+

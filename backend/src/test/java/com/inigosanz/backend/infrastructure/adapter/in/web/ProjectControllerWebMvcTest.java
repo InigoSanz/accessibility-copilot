@@ -2,8 +2,11 @@ package com.inigosanz.backend.infrastructure.adapter.in.web;
 
 import com.inigosanz.backend.domain.model.Project;
 import com.inigosanz.backend.domain.port.in.CreateProjectUseCase;
+import com.inigosanz.backend.domain.port.in.GetProjectByIdUseCase;
 import com.inigosanz.backend.domain.port.in.ListProjectsUseCase;
 import com.inigosanz.backend.infrastructure.adapter.in.web.dto.ProjectResponse;
+import com.inigosanz.backend.infrastructure.adapter.in.web.exception.GlobalExceptionHandler;
+import com.inigosanz.backend.shared.exception.ProjectNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -28,8 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProjectController.class)
-@Import({ProjectController.class, ProjectControllerWebMvcTest.MockConfig.class})
-@ContextConfiguration(classes = {ProjectController.class, ProjectControllerWebMvcTest.MockConfig.class})
+@Import({ProjectController.class, GlobalExceptionHandler.class, ProjectControllerWebMvcTest.MockConfig.class})
+@ContextConfiguration(classes = {ProjectController.class, GlobalExceptionHandler.class, ProjectControllerWebMvcTest.MockConfig.class})
 class ProjectControllerWebMvcTest {
 
     @Autowired
@@ -40,6 +43,9 @@ class ProjectControllerWebMvcTest {
 
     @Autowired
     private ListProjectsUseCase listProjectsUseCase;
+
+    @Autowired
+    private GetProjectByIdUseCase getProjectByIdUseCase;
 
     @Autowired
     private ProjectWebMapper projectWebMapper;
@@ -83,7 +89,7 @@ class ProjectControllerWebMvcTest {
         Project domainProject = new Project(1L, "Accessibility Copilot", "https://example.com", createdAt);
         ProjectResponse response = new ProjectResponse(1L, "Accessibility Copilot", "https://example.com", createdAt);
 
-        when(listProjectsUseCase.list()).thenReturn(List.of(domainProject));
+        when(listProjectsUseCase.findAll()).thenReturn(List.of(domainProject));
         when(projectWebMapper.toResponseList(List.of(domainProject))).thenReturn(List.of(response));
 
         mockMvc.perform(get("/api/projects"))
@@ -94,8 +100,41 @@ class ProjectControllerWebMvcTest {
                 .andExpect(jsonPath("$[0].rootUrl").value("https://example.com"))
                 .andExpect(jsonPath("$[0].createdAt").value("2026-03-10T10:45:13.7506593"));
 
-        verify(listProjectsUseCase).list();
+        verify(listProjectsUseCase).findAll();
         verify(projectWebMapper).toResponseList(List.of(domainProject));
+    }
+
+    @Test
+    void findById_whenProjectExists_shouldReturnProjectJson() throws Exception {
+        LocalDateTime createdAt = LocalDateTime.of(2026, 3, 10, 10, 45, 13, 750_659_300);
+        Project project = new Project(1L, "Accessibility Copilot", "https://example.com", createdAt);
+        ProjectResponse response = new ProjectResponse(1L, "Accessibility Copilot", "https://example.com", createdAt);
+
+        when(getProjectByIdUseCase.findById(1L)).thenReturn(project);
+        when(projectWebMapper.toResponse(project)).thenReturn(response);
+
+        mockMvc.perform(get("/api/projects/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Accessibility Copilot"))
+                .andExpect(jsonPath("$.rootUrl").value("https://example.com"))
+                .andExpect(jsonPath("$.createdAt").value("2026-03-10T10:45:13.7506593"));
+
+        verify(getProjectByIdUseCase).findById(1L);
+        verify(projectWebMapper).toResponse(project);
+    }
+
+    @Test
+    void findById_whenProjectDoesNotExist_shouldReturnNotFound() throws Exception {
+        when(getProjectByIdUseCase.findById(999L)).thenThrow(new ProjectNotFoundException());
+
+        mockMvc.perform(get("/api/projects/999"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("Project not found"));
+
+        verify(getProjectByIdUseCase).findById(999L);
     }
 
     @Configuration
@@ -109,6 +148,11 @@ class ProjectControllerWebMvcTest {
         @Bean
         ListProjectsUseCase listProjectsUseCase() {
             return mock(ListProjectsUseCase.class);
+        }
+
+        @Bean
+        GetProjectByIdUseCase getProjectByIdUseCase() {
+            return mock(GetProjectByIdUseCase.class);
         }
 
         @Bean

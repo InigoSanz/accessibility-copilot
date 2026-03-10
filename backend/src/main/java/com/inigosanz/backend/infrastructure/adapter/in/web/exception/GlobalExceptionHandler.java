@@ -1,6 +1,8 @@
 package com.inigosanz.backend.infrastructure.adapter.in.web.exception;
 
+import com.inigosanz.backend.infrastructure.adapter.in.web.dto.ErrorResponse;
 import com.inigosanz.backend.infrastructure.adapter.in.web.dto.ValidationErrorResponse;
+import com.inigosanz.backend.shared.exception.ProjectNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -25,5 +27,10 @@ public class GlobalExceptionHandler {
         ValidationErrorResponse response = new ValidationErrorResponse("Validation error", errors);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
-}
 
+    @ExceptionHandler(ProjectNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleProjectNotFound(ProjectNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(ex.getMessage()));
+    }
+}
