@@ -4,6 +4,9 @@ import com.inigosanz.backend.domain.model.Scan;
 import com.inigosanz.backend.domain.port.out.ScanRepositoryPort;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Optional;
+
 @Component
 public class ScanPersistenceAdapter implements ScanRepositoryPort {
 
@@ -21,5 +24,18 @@ public class ScanPersistenceAdapter implements ScanRepositoryPort {
         ScanEntity savedEntity = jpaScanRepository.save(entityToSave);
         return scanPersistenceMapper.toDomain(savedEntity);
     }
-}
 
+    @Override
+    public List<Scan> findByProjectId(Long projectId) {
+        return jpaScanRepository.findByProjectId(projectId)
+                .stream()
+                .map(scanPersistenceMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public Optional<Scan> findById(Long scanId) {
+        return jpaScanRepository.findById(scanId)
+                .map(scanPersistenceMapper::toDomain);
+    }
+}

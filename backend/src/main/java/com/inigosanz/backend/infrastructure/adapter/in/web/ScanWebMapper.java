@@ -4,9 +4,12 @@ import com.inigosanz.backend.domain.model.Scan;
 import com.inigosanz.backend.infrastructure.adapter.in.web.dto.ScanResponse;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface ScanWebMapper {
 
     ScanResponse toResponse(Scan scan);
-}
 
+    List<ScanResponse> toResponseList(List<Scan> scans);
+}
