@@ -8,7 +8,9 @@ public record AccessibilityIssueResponse(
         String severity,
         String wcagCriterion,
         String pageUrl,
-        String htmlSnippet
+        String htmlSnippet,
+        String selector,
+        String recommendation,
+        String helpUrl
 ) {
 }
-

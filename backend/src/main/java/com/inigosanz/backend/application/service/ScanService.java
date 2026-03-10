@@ -83,7 +83,10 @@ public class ScanService implements CreateScanUseCase, ListScansByProjectUseCase
                         "serious",
                         "1.1.1",
                         "https://example.com",
-                        "<img src='hero.jpg'>"
+                        "<img src='hero.jpg'>",
+                        "img.hero-banner",
+                        "Add a meaningful alt attribute describing the image purpose.",
+                        "https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html"
                 ),
                 new AccessibilityIssue(
                         null,
@@ -93,7 +96,10 @@ public class ScanService implements CreateScanUseCase, ListScansByProjectUseCase
                         "serious",
                         "1.4.3",
                         "https://example.com",
-                        "<button style='color:#aaa;background:#fff'>Submit</button>"
+                        "<button style='color:#aaa;background:#fff'>Submit</button>",
+                        "button.submit-primary",
+                        "Increase text and background contrast to meet at least a 4.5:1 ratio.",
+                        "https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html"
                 ),
                 new AccessibilityIssue(
                         null,
@@ -103,7 +109,10 @@ public class ScanService implements CreateScanUseCase, ListScansByProjectUseCase
                         "moderate",
                         "3.3.2",
                         "https://example.com/contact",
-                        "<input type='email'>"
+                        "<input type='email'>",
+                        "form#contact input[type='email']",
+                        "Associate the input with a visible label using the for and id attributes.",
+                        "https://www.w3.org/WAI/WCAG21/Understanding/labels-or-instructions.html"
                 )
         );
     }

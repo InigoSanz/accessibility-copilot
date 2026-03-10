@@ -12,6 +12,9 @@ public class AccessibilityIssue {
     private final String wcagCriterion;
     private final String pageUrl;
     private final String htmlSnippet;
+    private final String selector;
+    private final String recommendation;
+    private final String helpUrl;
 
     public AccessibilityIssue(
             Long id,
@@ -21,7 +24,10 @@ public class AccessibilityIssue {
             String severity,
             String wcagCriterion,
             String pageUrl,
-            String htmlSnippet
+            String htmlSnippet,
+            String selector,
+            String recommendation,
+            String helpUrl
     ) {
         this.id = id;
         this.scanId = Objects.requireNonNull(scanId, "scanId is required");
@@ -31,6 +37,9 @@ public class AccessibilityIssue {
         this.wcagCriterion = wcagCriterion;
         this.pageUrl = pageUrl;
         this.htmlSnippet = htmlSnippet;
+        this.selector = selector;
+        this.recommendation = recommendation;
+        this.helpUrl = helpUrl;
     }
 
     public Long getId() {
@@ -64,5 +73,16 @@ public class AccessibilityIssue {
     public String getHtmlSnippet() {
         return htmlSnippet;
     }
-}
 
+    public String getSelector() {
+        return selector;
+    }
+
+    public String getRecommendation() {
+        return recommendation;
+    }
+
+    public String getHelpUrl() {
+        return helpUrl;
+    }
+}

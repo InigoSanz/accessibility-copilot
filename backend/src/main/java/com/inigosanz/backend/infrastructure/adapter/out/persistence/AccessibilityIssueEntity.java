@@ -36,6 +36,15 @@ public class AccessibilityIssueEntity {
     @Column(name = "html_snippet", columnDefinition = "TEXT")
     private String htmlSnippet;
 
+    @Column(length = 500)
+    private String selector;
+
+    @Column(columnDefinition = "TEXT")
+    private String recommendation;
+
+    @Column(name = "help_url", columnDefinition = "TEXT")
+    private String helpUrl;
+
     public AccessibilityIssueEntity() {
     }
 
@@ -102,5 +111,28 @@ public class AccessibilityIssueEntity {
     public void setHtmlSnippet(String htmlSnippet) {
         this.htmlSnippet = htmlSnippet;
     }
-}
 
+    public String getSelector() {
+        return selector;
+    }
+
+    public void setSelector(String selector) {
+        this.selector = selector;
+    }
+
+    public String getRecommendation() {
+        return recommendation;
+    }
+
+    public void setRecommendation(String recommendation) {
+        this.recommendation = recommendation;
+    }
+
+    public String getHelpUrl() {
+        return helpUrl;
+    }
+
+    public void setHelpUrl(String helpUrl) {
+        this.helpUrl = helpUrl;
+    }
+}

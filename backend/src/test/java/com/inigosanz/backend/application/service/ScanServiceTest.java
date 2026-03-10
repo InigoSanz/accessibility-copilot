@@ -83,6 +83,36 @@ class ScanServiceTest {
         assertEquals(savedScan.getId(), generatedIssues.get(1).getScanId());
         assertEquals(savedScan.getId(), generatedIssues.get(2).getScanId());
 
+        assertEquals("img.hero-banner", generatedIssues.get(0).getSelector());
+        assertEquals(
+                "Add a meaningful alt attribute describing the image purpose.",
+                generatedIssues.get(0).getRecommendation()
+        );
+        assertEquals(
+                "https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html",
+                generatedIssues.get(0).getHelpUrl()
+        );
+
+        assertEquals("button.submit-primary", generatedIssues.get(1).getSelector());
+        assertEquals(
+                "Increase text and background contrast to meet at least a 4.5:1 ratio.",
+                generatedIssues.get(1).getRecommendation()
+        );
+        assertEquals(
+                "https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html",
+                generatedIssues.get(1).getHelpUrl()
+        );
+
+        assertEquals("form#contact input[type='email']", generatedIssues.get(2).getSelector());
+        assertEquals(
+                "Associate the input with a visible label using the for and id attributes.",
+                generatedIssues.get(2).getRecommendation()
+        );
+        assertEquals(
+                "https://www.w3.org/WAI/WCAG21/Understanding/labels-or-instructions.html",
+                generatedIssues.get(2).getHelpUrl()
+        );
+
         assertSame(savedScan, result);
     }
 

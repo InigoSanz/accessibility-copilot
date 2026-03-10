@@ -41,9 +41,45 @@ class ScanSummaryServiceTest {
         Scan scan = new Scan(scanId, 1L, ScanStatus.COMPLETED, LocalDateTime.now(), LocalDateTime.now());
 
         List<AccessibilityIssue> issues = List.of(
-                new AccessibilityIssue(null, scanId, "image-alt", "msg1", "serious", "1.1.1", "https://example.com", "<img>"),
-                new AccessibilityIssue(null, scanId, "color-contrast", "msg2", "serious", "1.4.3", "https://example.com", "<button>"),
-                new AccessibilityIssue(null, scanId, "label", "msg3", "moderate", "3.3.2", "https://example.com/contact", "<input>")
+                new AccessibilityIssue(
+                        null,
+                        scanId,
+                        "image-alt",
+                        "msg1",
+                        "serious",
+                        "1.1.1",
+                        "https://example.com",
+                        "<img>",
+                        "img.hero-banner",
+                        "Add a meaningful alt attribute describing the image purpose.",
+                        "https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html"
+                ),
+                new AccessibilityIssue(
+                        null,
+                        scanId,
+                        "color-contrast",
+                        "msg2",
+                        "serious",
+                        "1.4.3",
+                        "https://example.com",
+                        "<button>",
+                        "button.submit-primary",
+                        "Increase text and background contrast to meet at least a 4.5:1 ratio.",
+                        "https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html"
+                ),
+                new AccessibilityIssue(
+                        null,
+                        scanId,
+                        "label",
+                        "msg3",
+                        "moderate",
+                        "3.3.2",
+                        "https://example.com/contact",
+                        "<input>",
+                        "form#contact input[type='email']",
+                        "Associate the input with a visible label using the for and id attributes.",
+                        "https://www.w3.org/WAI/WCAG21/Understanding/labels-or-instructions.html"
+                )
         );
 
         when(scanRepositoryPort.findById(scanId)).thenReturn(Optional.of(scan));

@@ -47,7 +47,10 @@ class AccessibilityIssueServiceTest {
                 "HIGH",
                 "1.1.1",
                 "https://example.com",
-                "<img src=\"banner.jpg\">"
+                "<img src=\"banner.jpg\">",
+                "img.hero-banner",
+                "Add a meaningful alt attribute describing the image purpose.",
+                "https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html"
         );
 
         when(scanRepositoryPort.findById(scanId)).thenReturn(Optional.of(scan));
@@ -75,4 +78,3 @@ class AccessibilityIssueServiceTest {
         assertEquals("Scan not found", exception.getMessage());
     }
 }
-

@@ -51,7 +51,10 @@ class AccessibilityIssueControllerWebMvcTest {
                 "HIGH",
                 "1.1.1",
                 "https://example.com",
-                "<img src=\"banner.jpg\">"
+                "<img src=\"banner.jpg\">",
+                "img.hero-banner",
+                "Add a meaningful alt attribute describing the image purpose.",
+                "https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html"
         );
 
         AccessibilityIssueResponse response = new AccessibilityIssueResponse(
@@ -62,7 +65,10 @@ class AccessibilityIssueControllerWebMvcTest {
                 "HIGH",
                 "1.1.1",
                 "https://example.com",
-                "<img src=\"banner.jpg\">"
+                "<img src=\"banner.jpg\">",
+                "img.hero-banner",
+                "Add a meaningful alt attribute describing the image purpose.",
+                "https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html"
         );
 
         when(listIssuesByScanUseCase.findByScanId(scanId)).thenReturn(List.of(issue));
@@ -78,7 +84,10 @@ class AccessibilityIssueControllerWebMvcTest {
                 .andExpect(jsonPath("$[0].severity").value("HIGH"))
                 .andExpect(jsonPath("$[0].wcagCriterion").value("1.1.1"))
                 .andExpect(jsonPath("$[0].pageUrl").value("https://example.com"))
-                .andExpect(jsonPath("$[0].htmlSnippet").value("<img src=\"banner.jpg\">"));
+                .andExpect(jsonPath("$[0].htmlSnippet").value("<img src=\"banner.jpg\">"))
+                .andExpect(jsonPath("$[0].selector").value("img.hero-banner"))
+                .andExpect(jsonPath("$[0].recommendation").value("Add a meaningful alt attribute describing the image purpose."))
+                .andExpect(jsonPath("$[0].helpUrl").value("https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html"));
 
         verify(listIssuesByScanUseCase).findByScanId(scanId);
         verify(accessibilityIssueWebMapper).toResponseList(List.of(issue));
