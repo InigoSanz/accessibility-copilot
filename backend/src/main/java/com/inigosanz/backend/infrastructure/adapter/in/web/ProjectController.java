@@ -4,6 +4,7 @@ import com.inigosanz.backend.domain.model.Project;
 import com.inigosanz.backend.domain.port.in.CreateProjectUseCase;
 import com.inigosanz.backend.infrastructure.adapter.in.web.dto.CreateProjectRequest;
 import com.inigosanz.backend.infrastructure.adapter.in.web.dto.ProjectResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,10 +26,9 @@ public class ProjectController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProjectResponse create(@RequestBody CreateProjectRequest request) {
+    public ProjectResponse create(@Valid @RequestBody CreateProjectRequest request) {
         Project projectToCreate = projectWebMapper.toDomain(request);
         Project createdProject = createProjectUseCase.create(projectToCreate);
         return projectWebMapper.toResponse(createdProject);
     }
 }
-

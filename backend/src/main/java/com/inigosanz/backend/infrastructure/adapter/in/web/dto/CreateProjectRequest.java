@@ -1,8 +1,9 @@
 package com.inigosanz.backend.infrastructure.adapter.in.web.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public record CreateProjectRequest(
-        String name,
-        String rootUrl
+        @NotBlank String name,
+        @NotBlank String rootUrl
 ) {
 }
-
