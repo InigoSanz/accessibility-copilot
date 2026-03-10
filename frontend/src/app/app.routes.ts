@@ -6,4 +6,11 @@ export const routes: Routes = [
     redirectTo: 'projects',
     pathMatch: 'full',
   },
+  {
+    path: 'projects',
+    loadComponent: () =>
+      import('./features/projects/pages/project-list-page/project-list-page').then(
+        (m) => m.ProjectListPage,
+      ),
+  },
 ];

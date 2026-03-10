@@ -1,0 +1,24 @@
+<section class="projects-page">
+  <header class="projects-header">
+    <h1>Projects</h1>
+    <p>Manage your accessibility audit workspaces</p>
+  </header>
+
+  @if (loading) {
+    <p class="status-message">Loading projects...</p>
+  } @else if (error) {
+    <p class="status-message status-message--error">{{ error }}</p>
+  } @else if (projects.length === 0) {
+    <p class="status-message">No projects yet. Create your first project to begin.</p>
+  } @else {
+    <div class="project-list" role="list" aria-label="Project list">
+      @for (project of projects; track project.id) {
+        <article class="project-card" role="listitem">
+          <h2>{{ project.name }}</h2>
+          <p class="project-url">{{ project.rootUrl }}</p>
+          <p class="project-meta">Created {{ project.createdAt | date: 'medium' }}</p>
+        </article>
+      }
+    </div>
+  }
+</section>

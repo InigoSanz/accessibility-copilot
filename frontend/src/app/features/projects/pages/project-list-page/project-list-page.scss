@@ -1,0 +1,68 @@
+.projects-page {
+  width: min(960px, 100%);
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+
+.projects-header {
+  margin-bottom: 1.5rem;
+
+  h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #1f2937;
+  }
+
+  p {
+    margin: 0.5rem 0 0;
+    font-size: 0.95rem;
+    color: #6b7280;
+  }
+}
+
+.status-message {
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background-color: #ffffff;
+  color: #374151;
+}
+
+.status-message--error {
+  border-color: #fca5a5;
+  background-color: #fef2f2;
+  color: #991b1b;
+}
+
+.project-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.project-card {
+  padding: 1rem 1.25rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background-color: #ffffff;
+
+  h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #111827;
+  }
+}
+
+.project-url {
+  margin: 0.5rem 0 0;
+  color: #374151;
+  word-break: break-word;
+}
+
+.project-meta {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
