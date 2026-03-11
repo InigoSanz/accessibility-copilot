@@ -54,6 +54,49 @@ ng e2e
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
+## OpenAPI contract sync
+
+The backend API contract is defined in `api/openapi.json` and is the source of truth for:
+
+- endpoints
+- HTTP methods
+- payloads and parameters
+- response schemas and field names
+
+This frontend uses the generated client in `src/app/api-client`.
+
+Available scripts:
+
+```bash
+npm run api:pull
+```
+
+Pulls the latest contract from `http://localhost:8080/v3/api-docs` into `api/openapi.json`.
+
+```bash
+npm run api:generate
+```
+
+Regenerates the Angular API client from `api/openapi.json` into `src/app/api-client`.
+
+```bash
+npm run api:sync
+```
+
+Runs both commands in sequence (`api:pull` + `api:generate`).
+
+Recommended workflow:
+
+1. Start backend locally.
+2. Run `npm run api:sync` after backend contract changes.
+3. Run `npm run build` (or `npm test`) to validate integration.
+4. Commit both `api/openapi.json` and generated client updates.
+
+Minimal CI recommendation:
+
+- Run `npm run api:generate` and fail if it creates uncommitted diffs.
+- This ensures the committed client is always aligned with `api/openapi.json`.
+
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

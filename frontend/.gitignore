@@ -63,3 +63,9 @@ Thumbs.db
 # VS Code
 .vscode/*
 !.vscode/extensions.json
+
+# OpenAPI generated metadata
+src/app/api-client/.openapi-generator/
+src/app/api-client/git_push.sh
+src/app/api-client/README.md
+src/app/api-client/.gitignore

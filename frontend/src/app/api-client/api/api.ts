@@ -1,0 +1,11 @@
+export * from './accessibilityIssueController.service';
+import { AccessibilityIssueControllerService } from './accessibilityIssueController.service';
+export * from './healthController.service';
+import { HealthControllerService } from './healthController.service';
+export * from './projectController.service';
+import { ProjectControllerService } from './projectController.service';
+export * from './scanController.service';
+import { ScanControllerService } from './scanController.service';
+export * from './scanSummaryController.service';
+import { ScanSummaryControllerService } from './scanSummaryController.service';
+export const APIS = [AccessibilityIssueControllerService, HealthControllerService, ProjectControllerService, ScanControllerService, ScanSummaryControllerService];

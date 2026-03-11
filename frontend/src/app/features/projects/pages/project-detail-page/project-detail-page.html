@@ -1,0 +1,41 @@
+<section class="project-detail-page">
+  <a class="back-link" routerLink="/projects">← Back to projects</a>
+
+  <section class="detail-section" aria-labelledby="project-overview-title">
+    <h1 id="project-overview-title">Project overview</h1>
+
+    @if (loadingProject) {
+      <p class="status-message">Loading project...</p>
+    } @else if (projectError) {
+      <p class="status-message status-message--error">{{ projectError }}</p>
+    } @else if (project) {
+      <article class="detail-card">
+        <h2>{{ project.name }}</h2>
+        <p class="detail-url">{{ project.rootUrl }}</p>
+        <p class="detail-meta">Created {{ project.createdAt | date: 'medium' }}</p>
+      </article>
+    }
+  </section>
+
+  <section class="detail-section" aria-labelledby="project-scans-title">
+    <h2 id="project-scans-title">Scans</h2>
+
+    @if (loadingScans) {
+      <p class="status-message">Loading scans...</p>
+    } @else if (scansError) {
+      <p class="status-message status-message--error">{{ scansError }}</p>
+    } @else if (scans.length === 0) {
+      <p class="status-message">No scans found for this project yet.</p>
+    } @else {
+      <div class="scan-list" role="list" aria-label="Project scans">
+        @for (scan of scans; track scan.id) {
+          <article class="scan-card" role="listitem">
+            <p class="scan-status">{{ scan.status }}</p>
+            <p class="scan-meta">Started {{ scan.startedAt | date: 'medium' }}</p>
+            <p class="scan-meta">Finished {{ scan.finishedAt | date: 'medium' }}</p>
+          </article>
+        }
+      </div>
+    }
+  </section>
+</section>

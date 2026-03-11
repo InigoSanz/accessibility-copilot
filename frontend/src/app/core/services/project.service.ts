@@ -1,21 +1,49 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 
-import { environment } from '../../../environments/environment';
-import { CreateProjectRequest } from '../models/create-project-request.model';
-import { Project } from '../models/project.model';
+import { ProjectControllerService } from '../../api-client/api/projectController.service';
+import { ScanControllerService } from '../../api-client/api/scanController.service';
+import { CreateProjectRequest } from '../../api-client/model/createProjectRequest';
+import { ProjectResponse } from '../../api-client/model/projectResponse';
+import { ScanResponse } from '../../api-client/model/scanResponse';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
-  private readonly http = inject(HttpClient);
-  private readonly projectsUrl = `${environment.apiBaseUrl}/projects`;
+  private readonly projectController = inject(ProjectControllerService);
+  private readonly scanController = inject(ScanControllerService);
 
-  getProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>(this.projectsUrl);
+  getProjects(): Observable<ProjectResponse[]> {
+    return this.projectController
+      .findAll()
+      .pipe(mergeMap((response) => this.normalizeResponse<ProjectResponse[]>(response)));
   }
 
-  createProject(request: CreateProjectRequest): Observable<Project> {
-    return this.http.post<Project>(this.projectsUrl, request);
+  createProject(request: CreateProjectRequest): Observable<ProjectResponse> {
+    return this.projectController
+      .create(request)
+      .pipe(mergeMap((response) => this.normalizeResponse<ProjectResponse>(response)));
+  }
+
+  getProjectById(id: number): Observable<ProjectResponse> {
+    return this.projectController
+      .findById1(id)
+      .pipe(mergeMap((response) => this.normalizeResponse<ProjectResponse>(response)));
+  }
+
+  getScansByProjectId(projectId: number): Observable<ScanResponse[]> {
+    return this.scanController
+      .findByProjectId(projectId)
+      .pipe(mergeMap((response) => this.normalizeResponse<ScanResponse[]>(response)));
+  }
+
+  private normalizeResponse<T>(response: unknown): Observable<T> {
+    if (response instanceof Blob) {
+      return from(response.text()).pipe(
+        mergeMap((content) => of(JSON.parse(content) as T)),
+      );
+    }
+
+    return of(response as T);
   }
 }

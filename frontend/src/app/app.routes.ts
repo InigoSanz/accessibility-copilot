@@ -7,7 +7,15 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'projects/:id',
+    loadComponent: () =>
+      import('./features/projects/pages/project-detail-page/project-detail-page').then(
+        (m) => m.ProjectDetailPage,
+      ),
+  },
+  {
     path: 'projects',
+    pathMatch: 'full',
     loadComponent: () =>
       import('./features/projects/pages/project-list-page/project-list-page').then(
         (m) => m.ProjectListPage,

@@ -6,7 +6,10 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "api:pull": "powershell -Command \"Invoke-WebRequest http://localhost:8080/v3/api-docs -OutFile api/openapi.json\"",
+    "api:generate": "openapi-generator-cli generate -i api/openapi.json -g typescript-angular -o src/app/api-client",
+    "api:sync": "npm run api:pull && npm run api:generate"
   },
   "private": true,
   "packageManager": "npm@10.8.2",
@@ -25,6 +28,7 @@
     "@angular/build": "^21.2.1",
     "@angular/cli": "^21.2.1",
     "@angular/compiler-cli": "^21.2.0",
+    "@openapitools/openapi-generator-cli": "^2.30.2",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
     "typescript": "~5.9.2",

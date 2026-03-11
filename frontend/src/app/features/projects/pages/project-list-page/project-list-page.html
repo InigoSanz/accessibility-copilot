@@ -57,6 +57,7 @@
             <h2>{{ project.name }}</h2>
             <p class="project-url">{{ project.rootUrl }}</p>
             <p class="project-meta">Created {{ project.createdAt | date: 'medium' }}</p>
+            <a class="project-open-link" [routerLink]="['/projects', project.id]">Open project</a>
           </article>
         }
       </div>
