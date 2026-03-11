@@ -4,6 +4,80 @@
   padding: 2rem 1rem 3rem;
 }
 
+.create-project-card {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem 1.25rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background-color: #ffffff;
+
+  h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #111827;
+  }
+
+  form {
+    margin-top: 1rem;
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  button {
+    width: fit-content;
+    padding: 0.6rem 1rem;
+    border: 0;
+    border-radius: 0.5rem;
+    background: #1f2937;
+    color: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}
+
+.form-field {
+  display: grid;
+  gap: 0.35rem;
+
+  label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    color: #111827;
+    font: inherit;
+  }
+
+  input:focus {
+    outline: 2px solid #9ca3af;
+    outline-offset: 1px;
+    border-color: #9ca3af;
+  }
+}
+
+.field-error {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #991b1b;
+}
+
+.projects-list-section {
+  display: block;
+}
+
 .projects-header {
   margin-bottom: 1.5rem;
 

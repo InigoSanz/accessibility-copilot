@@ -4,21 +4,62 @@
     <p>Manage your accessibility audit workspaces</p>
   </header>
 
-  @if (loading) {
-    <p class="status-message">Loading projects...</p>
-  } @else if (error) {
-    <p class="status-message status-message--error">{{ error }}</p>
-  } @else if (projects.length === 0) {
-    <p class="status-message">No projects yet. Create your first project to begin.</p>
-  } @else {
-    <div class="project-list" role="list" aria-label="Project list">
-      @for (project of projects; track project.id) {
-        <article class="project-card" role="listitem">
-          <h2>{{ project.name }}</h2>
-          <p class="project-url">{{ project.rootUrl }}</p>
-          <p class="project-meta">Created {{ project.createdAt | date: 'medium' }}</p>
-        </article>
+  <section class="create-project-card" aria-labelledby="create-project-title">
+    <h2 id="create-project-title">Create project</h2>
+
+    <form [formGroup]="createProjectForm" (ngSubmit)="submit()" novalidate>
+      <div class="form-field">
+        <label for="project-name">Name</label>
+        <input id="project-name" type="text" formControlName="name" placeholder="Accessibility Copilot" />
+        @if (nameControl.touched && nameControl.invalid) {
+          <p class="field-error">Name is required.</p>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="project-root-url">Root URL</label>
+        <input
+          id="project-root-url"
+          type="text"
+          formControlName="rootUrl"
+          placeholder="https://example.com"
+        />
+        @if (rootUrlControl.touched && rootUrlControl.invalid) {
+          <p class="field-error">Root URL is required.</p>
+        }
+      </div>
+
+      @if (submitError) {
+        <p class="status-message status-message--error">{{ submitError }}</p>
       }
-    </div>
-  }
+
+      <button type="submit" [disabled]="submitting">
+        @if (submitting) {
+          Creating...
+        } @else {
+          Create project
+        }
+      </button>
+    </form>
+  </section>
+
+  <section class="projects-list-section" aria-label="Projects list">
+    @if (loading) {
+      <p class="status-message">Loading projects...</p>
+    } @else if (error) {
+      <p class="status-message status-message--error">{{ error }}</p>
+    } @else if (projects.length === 0) {
+      <p class="status-message">No projects yet. Create your first project to begin.</p>
+    } @else {
+      <div class="project-list" role="list" aria-label="Project list">
+        @for (project of projects; track project.id) {
+          <article class="project-card" role="listitem">
+            <h2>{{ project.name }}</h2>
+            <p class="project-url">{{ project.rootUrl }}</p>
+            <p class="project-meta">Created {{ project.createdAt | date: 'medium' }}</p>
+          </article>
+        }
+      </div>
+    }
+  </section>
 </section>
