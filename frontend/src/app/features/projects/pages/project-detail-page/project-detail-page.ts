@@ -22,6 +22,9 @@ export class ProjectDetailPage implements OnInit {
   loadingScans = true;
   projectError: string | null = null;
   scansError: string | null = null;
+  runningScan = false;
+  runScanError: string | null = null;
+  runScanSuccess: string | null = null;
   project: ProjectResponse | null = null;
   scans: ScanResponse[] = [];
 
@@ -73,6 +76,33 @@ export class ProjectDetailPage implements OnInit {
       error: () => {
         this.scansError = 'Could not load scans. Please try again.';
         this.loadingScans = false;
+        this.changeDetectorRef.markForCheck();
+      },
+    });
+  }
+
+  runScan(): void {
+    if (!this.project || typeof this.project.id !== 'number') {
+      return;
+    }
+
+    const projectId = this.project.id;
+
+    this.runningScan = true;
+    this.runScanError = null;
+    this.runScanSuccess = null;
+    this.changeDetectorRef.markForCheck();
+
+    this.projectService.runScan(projectId).subscribe({
+      next: () => {
+        this.runningScan = false;
+        this.runScanSuccess = 'Scan completed successfully.';
+        this.changeDetectorRef.markForCheck();
+        this.loadScans(projectId);
+      },
+      error: () => {
+        this.runningScan = false;
+        this.runScanError = 'Could not run scan. Please try again.';
         this.changeDetectorRef.markForCheck();
       },
     });

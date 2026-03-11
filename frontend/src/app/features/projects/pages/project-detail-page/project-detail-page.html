@@ -17,6 +17,33 @@
     }
   </section>
 
+  <section class="detail-section" aria-labelledby="project-actions-title">
+    <h2 id="project-actions-title">Actions</h2>
+
+    <article class="actions-card">
+      <button
+        type="button"
+        class="primary-button"
+        (click)="runScan()"
+        [disabled]="runningScan || !project"
+      >
+        @if (runningScan) {
+          Running scan...
+        } @else {
+          Run scan
+        }
+      </button>
+
+      @if (runScanSuccess) {
+        <p class="status-message status-message--success">{{ runScanSuccess }}</p>
+      }
+
+      @if (runScanError) {
+        <p class="status-message status-message--error">{{ runScanError }}</p>
+      }
+    </article>
+  </section>
+
   <section class="detail-section" aria-labelledby="project-scans-title">
     <h2 id="project-scans-title">Scans</h2>
 

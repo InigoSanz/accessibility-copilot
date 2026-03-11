@@ -8,6 +8,8 @@ import { CreateProjectRequest } from '../../api-client/model/createProjectReques
 import { ProjectResponse } from '../../api-client/model/projectResponse';
 import { ScanResponse } from '../../api-client/model/scanResponse';
 
+type Scan = ScanResponse;
+
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
   private readonly projectController = inject(ProjectControllerService);
@@ -35,6 +37,12 @@ export class ProjectService {
     return this.scanController
       .findByProjectId(projectId)
       .pipe(mergeMap((response) => this.normalizeResponse<ScanResponse[]>(response)));
+  }
+
+  runScan(projectId: number): Observable<Scan> {
+    return this.scanController
+      .create1(projectId)
+      .pipe(mergeMap((response) => this.normalizeResponse<Scan>(response)));
   }
 
   private normalizeResponse<T>(response: unknown): Observable<T> {
