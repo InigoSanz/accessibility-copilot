@@ -18,6 +18,11 @@ interface ScanHistoryItem {
   finishedAt: string | null;
 }
 
+interface ProjectFilterOption {
+  id: number;
+  name: string;
+}
+
 @Component({
   selector: 'app-scan-history-page',
   imports: [CommonModule, DatePipe, RouterLink],
@@ -29,12 +34,54 @@ export class ScanHistoryPage implements OnInit {
   private readonly projectService = inject(ProjectService);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
+  readonly statusOptions = ['ALL', 'RUNNING', 'COMPLETED', 'FAILED'] as const;
+
   loading = true;
   error: string | null = null;
   scans: ScanHistoryItem[] = [];
+  selectedStatus: (typeof this.statusOptions)[number] = 'ALL';
+  selectedProjectId: string = 'ALL';
 
   ngOnInit(): void {
     this.loadHistory();
+  }
+
+  get filteredScans(): ScanHistoryItem[] {
+    return this.scans.filter((scan) => {
+      const matchesStatus = this.selectedStatus === 'ALL' || scan.status === this.selectedStatus;
+      const matchesProject =
+        this.selectedProjectId === 'ALL' ||
+        (scan.projectId !== null && String(scan.projectId) === this.selectedProjectId);
+
+      return matchesStatus && matchesProject;
+    });
+  }
+
+  get projectOptions(): ProjectFilterOption[] {
+    const projectsById = new Map<number, string>();
+
+    for (const scan of this.scans) {
+      if (scan.projectId !== null && !projectsById.has(scan.projectId)) {
+        projectsById.set(scan.projectId, scan.projectName);
+      }
+    }
+
+    return Array.from(projectsById.entries())
+      .map(([id, name]) => ({ id, name }))
+      .sort((left, right) => left.name.localeCompare(right.name));
+  }
+
+  setStatusFilter(event: Event): void {
+    const value = (event.target as HTMLSelectElement | null)?.value;
+
+    if (value && this.statusOptions.includes(value as (typeof this.statusOptions)[number])) {
+      this.selectedStatus = value as (typeof this.statusOptions)[number];
+    }
+  }
+
+  setProjectFilter(event: Event): void {
+    const value = (event.target as HTMLSelectElement | null)?.value;
+    this.selectedProjectId = value && value.length > 0 ? value : 'ALL';
   }
 
   statusClass(status: string | undefined): string {
@@ -69,6 +116,8 @@ export class ScanHistoryPage implements OnInit {
             const rightTime = right.startedAt ? new Date(right.startedAt).getTime() : 0;
             return rightTime - leftTime;
           });
+          this.selectedStatus = 'ALL';
+          this.selectedProjectId = 'ALL';
           this.loading = false;
           this.changeDetectorRef.markForCheck();
         },

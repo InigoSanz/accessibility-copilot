@@ -10,8 +10,37 @@
   <section class="history-section" aria-labelledby="history-list-title">
     <div class="section-head">
       <h2 id="history-list-title">Recent scans</h2>
-      <p>{{ scans.length }} scan(s)</p>
+      <p>{{ filteredScans.length }} of {{ scans.length }} scan(s)</p>
     </div>
+
+    @if (!loading && !error && scans.length > 0) {
+      <article class="surface-card filters-panel" aria-label="Scan filters">
+        <div class="filters-grid">
+          <div class="form-field">
+            <label for="status-filter">Status</label>
+            <select id="status-filter" [value]="selectedStatus" (change)="setStatusFilter($event)">
+              @for (status of statusOptions; track status) {
+                <option [value]="status">{{ status === 'ALL' ? 'All statuses' : status }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="project-filter">Project</label>
+            <select
+              id="project-filter"
+              [value]="selectedProjectId"
+              (change)="setProjectFilter($event)"
+            >
+              <option value="ALL">All projects</option>
+              @for (project of projectOptions; track project.id) {
+                <option [value]="project.id">{{ project.name }}</option>
+              }
+            </select>
+          </div>
+        </div>
+      </article>
+    }
 
     @if (loading) {
       <p class="status-message">Loading scan history...</p>
@@ -19,9 +48,11 @@
       <p class="status-message status-message--error">{{ error }}</p>
     } @else if (scans.length === 0) {
       <p class="status-message">No scans yet. Run your first scan from a project page.</p>
+    } @else if (filteredScans.length === 0) {
+      <p class="status-message">No scans match the selected filters.</p>
     } @else {
       <div class="history-list" role="list" aria-label="Scan history list">
-        @for (scan of scans; track scan.scanId ?? $index) {
+        @for (scan of filteredScans; track scan.scanId ?? $index) {
           <article class="surface-card history-card" role="listitem">
             <div class="history-card__head">
               <div>
