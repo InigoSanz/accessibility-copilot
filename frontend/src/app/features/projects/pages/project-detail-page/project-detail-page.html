@@ -1,51 +1,68 @@
-<section class="project-detail-page">
-  <a class="back-link" routerLink="/projects">← Back to projects</a>
+<section class="project-detail-page page-shell">
+  <a class="back-link" routerLink="/projects">← Back to project list</a>
 
-  <section class="detail-section" aria-labelledby="project-overview-title">
-    <h1 id="project-overview-title">Project overview</h1>
+  <header class="page-hero" aria-labelledby="project-overview-title">
+    <span class="page-hero__eyebrow">Project detail</span>
+    <h1 id="project-overview-title">Project operations</h1>
+    <p>Run new accessibility scans and track their lifecycle from one place.</p>
+  </header>
 
-    @if (loadingProject) {
-      <p class="status-message">Loading project...</p>
-    } @else if (projectError) {
-      <p class="status-message status-message--error">{{ projectError }}</p>
-    } @else if (project) {
-      <article class="detail-card">
-        <h2>{{ project.name }}</h2>
-        <p class="detail-url">{{ project.rootUrl }}</p>
-        <p class="detail-meta">Created {{ project.createdAt | date: 'medium' }}</p>
-      </article>
-    }
-  </section>
+  <div class="detail-grid">
+    <section class="detail-column" aria-labelledby="project-summary-title">
+      <div class="section-head">
+        <h2 id="project-summary-title">Project summary</h2>
+      </div>
 
-  <section class="detail-section" aria-labelledby="project-actions-title">
-    <h2 id="project-actions-title">Actions</h2>
+      @if (loadingProject) {
+        <p class="status-message">Loading project details...</p>
+      } @else if (projectError) {
+        <p class="status-message status-message--error">{{ projectError }}</p>
+      } @else if (project) {
+        <article class="surface-card detail-card">
+          <h3>{{ project.name }}</h3>
+          <p class="detail-url">{{ project.rootUrl }}</p>
+          <p class="detail-meta">Created {{ project.createdAt | date: 'medium' }}</p>
+        </article>
+      }
+    </section>
 
-    <article class="actions-card">
-      <button
-        type="button"
-        class="primary-button"
-        (click)="runScan()"
-        [disabled]="runningScan || !project"
-      >
-        @if (runningScan) {
-          Starting scan...
-        } @else {
-          Run scan
+    <section class="detail-column" aria-labelledby="project-actions-title">
+      <div class="section-head">
+        <h2 id="project-actions-title">Scan actions</h2>
+      </div>
+
+      <article class="surface-card actions-card">
+        <p>Launch a new scan for this project and monitor progress in real time.</p>
+
+        <button
+          type="button"
+          class="btn btn-primary run-scan-button"
+          (click)="runScan()"
+          [disabled]="runningScan || !project"
+        >
+          @if (runningScan) {
+            Starting scan...
+          } @else {
+            Run scan now
+          }
+        </button>
+
+        @if (runScanSuccess) {
+          <p class="status-message status-message--success">{{ runScanSuccess }}</p>
         }
-      </button>
 
-      @if (runScanSuccess) {
-        <p class="status-message status-message--success">{{ runScanSuccess }}</p>
-      }
-
-      @if (runScanError) {
-        <p class="status-message status-message--error">{{ runScanError }}</p>
-      }
-    </article>
-  </section>
+        @if (runScanError) {
+          <p class="status-message status-message--error">{{ runScanError }}</p>
+        }
+      </article>
+    </section>
+  </div>
 
   <section class="detail-section" aria-labelledby="project-scans-title">
-    <h2 id="project-scans-title">Scans</h2>
+    <div class="section-head">
+      <h2 id="project-scans-title">Scans</h2>
+      <p>{{ scans.length }} scan(s)</p>
+    </div>
 
     @if (loadingScans) {
       <p class="status-message">Loading scans...</p>
@@ -56,16 +73,19 @@
     } @else {
       <div class="scan-list" role="list" aria-label="Project scans">
         @for (scan of scans; track scan.id) {
-          <article class="scan-card" role="listitem">
-            <p class="scan-status">
+          <article class="surface-card scan-card" role="listitem">
+            <div class="scan-card__header">
+              <p class="scan-id">Scan #{{ scan.id ?? 'N/A' }}</p>
               <span [class]="statusClass(scan.status)">{{ scan.status || 'N/A' }}</span>
-            </p>
-            <p class="scan-meta">Started {{ scan.startedAt | date: 'medium' }}</p>
-            <p class="scan-meta">
-              Finished {{ scan.finishedAt ? (scan.finishedAt | date: 'medium') : 'N/A' }}
-            </p>
+            </div>
+
+            <div class="scan-timeline">
+              <p><strong>Started:</strong> {{ scan.startedAt | date: 'medium' }}</p>
+              <p><strong>Finished:</strong> {{ scan.finishedAt ? (scan.finishedAt | date: 'medium') : 'In progress' }}</p>
+            </div>
+
             @if (scan.id) {
-              <a class="secondary-button" [routerLink]="['/scans', scan.id]">View results</a>
+              <a class="btn btn-secondary" [routerLink]="['/scans', scan.id]">Open scan detail</a>
             }
           </article>
         }

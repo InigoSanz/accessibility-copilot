@@ -1,71 +1,80 @@
-<section class="scan-detail-page">
+<section class="scan-detail-page page-shell">
   @if (scan?.projectId) {
     <a class="back-link" [routerLink]="['/projects', scan?.projectId]">← Back to project</a>
   }
 
-  <section class="detail-section" aria-labelledby="scan-overview-title">
-    <h1 id="scan-overview-title">Scan overview</h1>
+  <header class="page-hero" aria-labelledby="scan-overview-title">
+    <span class="page-hero__eyebrow">Scan detail</span>
+    <h1 id="scan-overview-title">Scan lifecycle and findings</h1>
+    <p>Track scan status, monitor summary metrics and inspect accessibility issues in detail.</p>
+  </header>
+
+  <section class="detail-section" aria-labelledby="scan-state-title">
+    <div class="section-head">
+      <h2 id="scan-state-title">Scan overview</h2>
+      @if (scan) {
+        <span [class]="statusClass(scan.status)">{{ scan.status || 'N/A' }}</span>
+      }
+    </div>
 
     @if (loading) {
       <p class="status-message">Loading scan, summary and issues...</p>
     } @else if (error) {
       <p class="status-message status-message--error">{{ error }}</p>
     } @else if (scan) {
-      <article class="scan-card">
-        <div class="overview-row">
-          <span class="label">Scan id</span>
-          <span class="value">{{ scan.id ?? 'N/A' }}</span>
-        </div>
-
-        <div class="overview-row">
-          <span class="label">Project id</span>
-          <span class="value">{{ scan.projectId ?? 'N/A' }}</span>
-        </div>
-
-        <div class="overview-row">
-          <span class="label">Status</span>
-          <span class="value">
-            <span [class]="statusClass(scan.status)">{{ scan.status || 'N/A' }}</span>
-          </span>
-        </div>
-
-        <div class="overview-row">
-          <span class="label">Started at</span>
-          <span class="value">{{ scan.startedAt ? (scan.startedAt | date: 'medium') : 'N/A' }}</span>
-        </div>
-
-        <div class="overview-row">
-          <span class="label">Finished at</span>
-          <span class="value">{{ scan.finishedAt ? (scan.finishedAt | date: 'medium') : 'N/A' }}</span>
+      <article class="surface-card scan-overview-card">
+        <div class="overview-grid">
+          <div class="overview-item">
+            <span class="label">Scan ID</span>
+            <strong class="value">{{ scan.id ?? 'N/A' }}</strong>
+          </div>
+          <div class="overview-item">
+            <span class="label">Project ID</span>
+            <strong class="value">{{ scan.projectId ?? 'N/A' }}</strong>
+          </div>
+          <div class="overview-item">
+            <span class="label">Started at</span>
+            <strong class="value">{{ scan.startedAt ? (scan.startedAt | date: 'medium') : 'N/A' }}</strong>
+          </div>
+          <div class="overview-item">
+            <span class="label">Finished at</span>
+            <strong class="value">{{ scan.finishedAt ? (scan.finishedAt | date: 'medium') : 'In progress' }}</strong>
+          </div>
+          @if (durationText) {
+            <div class="overview-item">
+              <span class="label">Duration</span>
+              <strong class="value">{{ durationText }}</strong>
+            </div>
+          }
         </div>
 
         @if (isPolling) {
-          <p class="inline-info">Auto-refreshing while scan is RUNNING...</p>
-        }
-
-        @if (durationText) {
-          <div class="overview-row">
-            <span class="label">Approx. duration</span>
-            <span class="value">{{ durationText }}</span>
-          </div>
+          <p class="status-message status-message--warning running-info">
+            Auto-refreshing this scan while backend status is RUNNING.
+          </p>
         }
       </article>
 
       @if (isFailed) {
-        <article class="status-message status-message--error">
+        <article class="status-message status-message--error failed-block">
           <h2>Scan failed</h2>
-          <p>The backend reported this scan as FAILED.</p>
+          <p>This scan ended in FAILED state. Review backend logs for execution details.</p>
         </article>
       }
 
       <section class="detail-section" aria-labelledby="scan-summary-title">
-        <h2 id="scan-summary-title">Summary</h2>
+        <div class="section-head">
+          <h2 id="scan-summary-title">Summary</h2>
+          @if (summary?.totalIssues !== undefined) {
+            <p>{{ summary?.totalIssues }} total issue(s)</p>
+          }
+        </div>
 
         @if (summary) {
-          <article class="scan-card">
-            <div class="overview-row">
-              <span class="label">Total issues</span>
-              <span class="value">{{ summary.totalIssues ?? 0 }}</span>
+          <article class="surface-card summary-card">
+            <div class="summary-total">
+              <span>Total issues</span>
+              <strong>{{ summary.totalIssues ?? 0 }}</strong>
             </div>
 
             @if (summary.bySeverity) {
@@ -87,7 +96,10 @@
       </section>
 
       <section class="detail-section" aria-labelledby="scan-issues-title">
-        <h2 id="scan-issues-title">Issues</h2>
+        <div class="section-head">
+          <h2 id="scan-issues-title">Issues</h2>
+          <p>{{ issues.length }} item(s)</p>
+        </div>
 
         @if (isRunning && issues.length === 0) {
           <p class="status-message">Scan is still running. Issues will appear as soon as they are available.</p>
@@ -96,9 +108,9 @@
         } @else {
           <div class="issues-list" role="list" aria-label="Scan issues">
             @for (issue of issues; track issue.id ?? $index) {
-              <article class="scan-card" role="listitem">
+              <article class="surface-card issue-card" role="listitem">
                 <div class="issue-header">
-                  <strong>{{ issue.ruleCode || 'Unknown rule' }}</strong>
+                  <strong class="issue-rule">{{ issue.ruleCode || 'Unknown rule' }}</strong>
                   <span class="issue-severity">{{ issue.severity || 'UNKNOWN' }}</span>
                 </div>
 

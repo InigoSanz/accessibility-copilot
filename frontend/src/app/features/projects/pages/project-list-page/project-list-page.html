@@ -1,66 +1,92 @@
-<section class="projects-page">
-  <header class="projects-header">
-    <h1>Projects</h1>
-    <p>Manage your accessibility audit workspaces</p>
+<section class="projects-page page-shell">
+  <header class="page-hero" aria-labelledby="projects-title">
+    <span class="page-hero__eyebrow">Workspace</span>
+    <h1 id="projects-title">Accessibility project hub</h1>
+    <p>
+      Create projects, run scans and keep your accessibility reviews organized in one polished
+      workspace.
+    </p>
   </header>
 
-  <section class="create-project-card" aria-labelledby="create-project-title">
-    <h2 id="create-project-title">Create project</h2>
-
-    <form [formGroup]="createProjectForm" (ngSubmit)="submit()" novalidate>
-      <div class="form-field">
-        <label for="project-name">Name</label>
-        <input id="project-name" type="text" formControlName="name" placeholder="Accessibility Copilot" />
-        @if (nameControl.touched && nameControl.invalid) {
-          <p class="field-error">Name is required.</p>
-        }
+  <section class="projects-grid">
+    <article class="surface-card create-panel" aria-labelledby="create-project-title">
+      <div class="section-head">
+        <h2 id="create-project-title">Create new project</h2>
+        <p>Set the name and root URL to start scanning.</p>
       </div>
 
-      <div class="form-field">
-        <label for="project-root-url">Root URL</label>
-        <input
-          id="project-root-url"
-          type="text"
-          formControlName="rootUrl"
-          placeholder="https://example.com"
-        />
-        @if (rootUrlControl.touched && rootUrlControl.invalid) {
-          <p class="field-error">Root URL is required.</p>
+      <form class="form-grid" [formGroup]="createProjectForm" (ngSubmit)="submit()" novalidate>
+        <div class="form-field">
+          <label for="project-name">Project name</label>
+          <input
+            id="project-name"
+            type="text"
+            formControlName="name"
+            placeholder="Corporate website"
+          />
+          @if (nameControl.touched && nameControl.invalid) {
+            <p class="field-error">Please add a project name.</p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="project-root-url">Root URL</label>
+          <input
+            id="project-root-url"
+            type="text"
+            formControlName="rootUrl"
+            placeholder="https://example.com"
+          />
+          @if (rootUrlControl.touched && rootUrlControl.invalid) {
+            <p class="field-error">Please add the root URL.</p>
+          }
+        </div>
+
+        @if (submitError) {
+          <p class="status-message status-message--error">{{ submitError }}</p>
         }
+
+        <button class="btn btn-primary" type="submit" [disabled]="submitting">
+          @if (submitting) {
+            Creating project...
+          } @else {
+            Create project
+          }
+        </button>
+      </form>
+    </article>
+
+    <section class="projects-list-section" aria-label="Projects list">
+      <div class="section-head">
+        <h2>Project portfolio</h2>
+        <p>{{ projects.length }} project(s)</p>
       </div>
 
-      @if (submitError) {
-        <p class="status-message status-message--error">{{ submitError }}</p>
+      @if (loading) {
+        <p class="status-message">Loading projects...</p>
+      } @else if (error) {
+        <p class="status-message status-message--error">{{ error }}</p>
+      } @else if (projects.length === 0) {
+        <p class="status-message">No projects yet. Create your first project to begin.</p>
+      } @else {
+        <div class="project-list" role="list" aria-label="Project list">
+          @for (project of projects; track project.id) {
+            <article class="surface-card project-card" role="listitem">
+              <div class="project-card__head">
+                <h3>{{ project.name }}</h3>
+                <span class="project-chip">Active</span>
+              </div>
+
+              <p class="project-url">{{ project.rootUrl }}</p>
+              <p class="project-meta">Created {{ project.createdAt | date: 'medium' }}</p>
+
+              <a class="btn btn-secondary project-open-link" [routerLink]="['/projects', project.id]">
+                Open project
+              </a>
+            </article>
+          }
+        </div>
       }
-
-      <button type="submit" [disabled]="submitting">
-        @if (submitting) {
-          Creating...
-        } @else {
-          Create project
-        }
-      </button>
-    </form>
-  </section>
-
-  <section class="projects-list-section" aria-label="Projects list">
-    @if (loading) {
-      <p class="status-message">Loading projects...</p>
-    } @else if (error) {
-      <p class="status-message status-message--error">{{ error }}</p>
-    } @else if (projects.length === 0) {
-      <p class="status-message">No projects yet. Create your first project to begin.</p>
-    } @else {
-      <div class="project-list" role="list" aria-label="Project list">
-        @for (project of projects; track project.id) {
-          <article class="project-card" role="listitem">
-            <h2>{{ project.name }}</h2>
-            <p class="project-url">{{ project.rootUrl }}</p>
-            <p class="project-meta">Created {{ project.createdAt | date: 'medium' }}</p>
-            <a class="project-open-link" [routerLink]="['/projects', project.id]">Open project</a>
-          </article>
-        }
-      </div>
-    }
+    </section>
   </section>
 </section>
