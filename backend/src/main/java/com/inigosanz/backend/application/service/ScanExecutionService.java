@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ScanExecutionService {
@@ -41,45 +42,52 @@ public class ScanExecutionService {
 
     @Async("scanTaskExecutor")
     public void executeAsync(Long scanId, Long projectId) {
+        Optional<Scan> maybeScan = scanRepositoryPort.findById(scanId);
+        if (maybeScan.isEmpty()) {
+            LOGGER.warn("Skipping scan execution because scanId={} was not found", scanId);
+            return;
+        }
+
+        Scan currentScan = maybeScan.get();
+        if (currentScan.getStatus() != ScanStatus.RUNNING) {
+            LOGGER.warn(
+                    "Skipping scan execution because scanId={} is in status={} instead of RUNNING",
+                    scanId,
+                    currentScan.getStatus()
+            );
+            return;
+        }
+
         try {
             Project project = projectRepositoryPort.findById(projectId)
                     .orElseThrow(() -> new IllegalStateException("Project not found for scan execution"));
-
-            Scan currentScan = scanRepositoryPort.findById(scanId)
-                    .orElseThrow(() -> new IllegalStateException("Scan not found for execution"));
 
             List<AccessibilityIssue> issues = webAccessibilityScannerPort.scan(scanId, project.getRootUrl());
             if (!issues.isEmpty()) {
                 accessibilityIssueRepositoryPort.saveAll(issues);
             }
 
-            Scan completedScan = new Scan(
-                    currentScan.getId(),
-                    currentScan.getProjectId(),
-                    ScanStatus.COMPLETED,
-                    currentScan.getStartedAt(),
-                    LocalDateTime.now(),
-                    null
-            );
-            scanRepositoryPort.save(completedScan);
+            boolean markedCompleted = scanRepositoryPort.markCompleted(scanId, LocalDateTime.now());
+            if (!markedCompleted) {
+                LOGGER.warn(
+                        "Scan status transition to COMPLETED was skipped for scanId={} because it is no longer RUNNING",
+                        scanId
+                );
+            }
         } catch (Exception exception) {
             LOGGER.error("Scan execution failed for scanId={}", scanId, exception);
-            markAsFailed(scanId, exception);
+            markAsFailed(scanId, truncateErrorMessage(exception.getMessage()));
         }
     }
 
-    private void markAsFailed(Long scanId, Exception exception) {
-        scanRepositoryPort.findById(scanId).ifPresent(scan -> {
-            Scan failedScan = new Scan(
-                    scan.getId(),
-                    scan.getProjectId(),
-                    ScanStatus.FAILED,
-                    scan.getStartedAt(),
-                    LocalDateTime.now(),
-                    truncateErrorMessage(exception.getMessage())
+    private void markAsFailed(Long scanId, String errorMessage) {
+        boolean markedFailed = scanRepositoryPort.markFailed(scanId, LocalDateTime.now(), errorMessage);
+        if (!markedFailed) {
+            LOGGER.warn(
+                    "Scan status transition to FAILED was skipped for scanId={} because it is no longer RUNNING",
+                    scanId
             );
-            scanRepositoryPort.save(failedScan);
-        });
+        }
     }
 
     private String truncateErrorMessage(String errorMessage) {

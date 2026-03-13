@@ -12,7 +12,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -53,6 +55,57 @@ class ScanPersistenceAdapterTest {
         assertEquals(2, result.size());
         assertSame(firstScan, result.get(0));
         assertSame(secondScan, result.get(1));
+    }
+
+    @Test
+    void shouldMarkCompletedOnlyWhenCurrentStatusIsRunning() {
+        Long scanId = 20L;
+        LocalDateTime finishedAt = LocalDateTime.now();
+
+        when(jpaScanRepository.updateStatusIfCurrentStatus(
+                scanId,
+                ScanStatus.RUNNING,
+                ScanStatus.COMPLETED,
+                finishedAt,
+                null
+        )).thenReturn(1);
+
+        boolean updated = scanPersistenceAdapter.markCompleted(scanId, finishedAt);
+
+        verify(jpaScanRepository, times(1)).updateStatusIfCurrentStatus(
+                scanId,
+                ScanStatus.RUNNING,
+                ScanStatus.COMPLETED,
+                finishedAt,
+                null
+        );
+        assertTrue(updated);
+    }
+
+    @Test
+    void shouldMarkFailedOnlyWhenCurrentStatusIsRunning() {
+        Long scanId = 21L;
+        LocalDateTime finishedAt = LocalDateTime.now();
+        String errorMessage = "Navigation timeout";
+
+        when(jpaScanRepository.updateStatusIfCurrentStatus(
+                scanId,
+                ScanStatus.RUNNING,
+                ScanStatus.FAILED,
+                finishedAt,
+                errorMessage
+        )).thenReturn(0);
+
+        boolean updated = scanPersistenceAdapter.markFailed(scanId, finishedAt, errorMessage);
+
+        verify(jpaScanRepository, times(1)).updateStatusIfCurrentStatus(
+                scanId,
+                ScanStatus.RUNNING,
+                ScanStatus.FAILED,
+                finishedAt,
+                errorMessage
+        );
+        assertFalse(updated);
     }
 }
 

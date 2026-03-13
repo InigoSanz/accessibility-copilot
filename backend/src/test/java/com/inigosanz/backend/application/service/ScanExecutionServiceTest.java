@@ -20,9 +20,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -74,6 +75,7 @@ class ScanExecutionServiceTest {
         when(projectRepositoryPort.findById(projectId)).thenReturn(Optional.of(project));
         when(scanRepositoryPort.findById(scanId)).thenReturn(Optional.of(runningScan));
         when(webAccessibilityScannerPort.scan(scanId, project.getRootUrl())).thenReturn(issues);
+        when(scanRepositoryPort.markCompleted(eq(scanId), any(LocalDateTime.class))).thenReturn(true);
 
         scanExecutionService.executeAsync(scanId, projectId);
 
@@ -81,17 +83,8 @@ class ScanExecutionServiceTest {
         verify(scanRepositoryPort, times(1)).findById(scanId);
         verify(webAccessibilityScannerPort, times(1)).scan(scanId, project.getRootUrl());
         verify(accessibilityIssueRepositoryPort, times(1)).saveAll(issues);
-
-        ArgumentCaptor<Scan> completedCaptor = ArgumentCaptor.forClass(Scan.class);
-        verify(scanRepositoryPort, times(1)).save(completedCaptor.capture());
-
-        Scan completedScan = completedCaptor.getValue();
-        assertEquals(scanId, completedScan.getId());
-        assertEquals(projectId, completedScan.getProjectId());
-        assertEquals(ScanStatus.COMPLETED, completedScan.getStatus());
-        assertEquals(startedAt, completedScan.getStartedAt());
-        assertNotNull(completedScan.getFinishedAt());
-        assertNull(completedScan.getErrorMessage());
+        verify(scanRepositoryPort, times(1)).markCompleted(eq(scanId), any(LocalDateTime.class));
+        verify(scanRepositoryPort, never()).markFailed(eq(scanId), any(LocalDateTime.class), anyString());
     }
 
     @Test
@@ -107,6 +100,8 @@ class ScanExecutionServiceTest {
         when(scanRepositoryPort.findById(scanId)).thenReturn(Optional.of(runningScan));
         when(webAccessibilityScannerPort.scan(scanId, project.getRootUrl()))
                 .thenThrow(new IllegalStateException("Navigation timeout"));
+        when(scanRepositoryPort.markFailed(eq(scanId), any(LocalDateTime.class), anyString()))
+                .thenReturn(true);
 
         scanExecutionService.executeAsync(scanId, projectId);
 
@@ -114,17 +109,29 @@ class ScanExecutionServiceTest {
         verify(scanRepositoryPort, times(2)).findById(scanId);
         verify(webAccessibilityScannerPort, times(1)).scan(scanId, project.getRootUrl());
         verify(accessibilityIssueRepositoryPort, never()).saveAll(anyList());
+        verify(scanRepositoryPort, never()).markCompleted(eq(scanId), any(LocalDateTime.class));
 
-        ArgumentCaptor<Scan> failedCaptor = ArgumentCaptor.forClass(Scan.class);
-        verify(scanRepositoryPort, times(1)).save(failedCaptor.capture());
+        ArgumentCaptor<String> errorMessageCaptor = ArgumentCaptor.forClass(String.class);
+        verify(scanRepositoryPort, times(1))
+                .markFailed(eq(scanId), any(LocalDateTime.class), errorMessageCaptor.capture());
+        assertEquals("Navigation timeout", errorMessageCaptor.getValue());
+    }
 
-        Scan failedScan = failedCaptor.getValue();
-        assertEquals(scanId, failedScan.getId());
-        assertEquals(projectId, failedScan.getProjectId());
-        assertEquals(ScanStatus.FAILED, failedScan.getStatus());
-        assertEquals(startedAt, failedScan.getStartedAt());
-        assertNotNull(failedScan.getFinishedAt());
-        assertEquals("Navigation timeout", failedScan.getErrorMessage());
+    @Test
+    void shouldSkipCompletionTransitionWhenScanIsNotRunning() {
+        Long scanId = 12L;
+        Long projectId = 4L;
+        Scan completedScan = new Scan(scanId, projectId, ScanStatus.COMPLETED, LocalDateTime.now(), LocalDateTime.now(), null);
+
+        when(scanRepositoryPort.findById(scanId)).thenReturn(Optional.of(completedScan));
+
+        scanExecutionService.executeAsync(scanId, projectId);
+
+        verify(scanRepositoryPort, times(1)).findById(scanId);
+        verify(projectRepositoryPort, never()).findById(projectId);
+        verify(webAccessibilityScannerPort, never()).scan(eq(scanId), anyString());
+        verify(scanRepositoryPort, never()).markCompleted(eq(scanId), any(LocalDateTime.class));
+        verify(scanRepositoryPort, never()).markFailed(eq(scanId), any(LocalDateTime.class), anyString());
     }
 }
 

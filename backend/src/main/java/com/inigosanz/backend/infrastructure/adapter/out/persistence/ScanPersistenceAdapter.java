@@ -1,9 +1,12 @@
 package com.inigosanz.backend.infrastructure.adapter.out.persistence;
 
 import com.inigosanz.backend.domain.model.Scan;
+import com.inigosanz.backend.domain.model.ScanStatus;
 import com.inigosanz.backend.domain.port.out.ScanRepositoryPort;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +26,30 @@ public class ScanPersistenceAdapter implements ScanRepositoryPort {
         ScanEntity entityToSave = scanPersistenceMapper.toEntity(scan);
         ScanEntity savedEntity = jpaScanRepository.save(entityToSave);
         return scanPersistenceMapper.toDomain(savedEntity);
+    }
+
+    @Override
+    @Transactional
+    public boolean markCompleted(Long scanId, LocalDateTime finishedAt) {
+        return jpaScanRepository.updateStatusIfCurrentStatus(
+                scanId,
+                ScanStatus.RUNNING,
+                ScanStatus.COMPLETED,
+                finishedAt,
+                null
+        ) > 0;
+    }
+
+    @Override
+    @Transactional
+    public boolean markFailed(Long scanId, LocalDateTime finishedAt, String errorMessage) {
+        return jpaScanRepository.updateStatusIfCurrentStatus(
+                scanId,
+                ScanStatus.RUNNING,
+                ScanStatus.FAILED,
+                finishedAt,
+                errorMessage
+        ) > 0;
     }
 
     @Override
