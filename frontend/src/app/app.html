@@ -38,4 +38,15 @@
 	<main class="app-main">
 		<router-outlet></router-outlet>
 	</main>
+
+	<footer class="app-footer" aria-label="Footer">
+		<div class="app-footer__inner">
+			<p class="app-footer__brand">Accessibility Copilot · © 2026</p>
+
+			<nav class="app-footer__nav" aria-label="Footer navigation">
+				<a href="/projects" (click)="navigateTo('/projects', $event)">Projects</a>
+				<a href="/scans" (click)="navigateTo('/scans', $event)">Scans</a>
+			</nav>
+		</div>
+	</footer>
 </div>
