@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
@@ -33,6 +33,8 @@ interface ProjectFilterOption {
 export class ScanHistoryPage implements OnInit {
   private readonly projectService = inject(ProjectService);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly statusOptions = ['ALL', 'RUNNING', 'COMPLETED', 'FAILED'] as const;
 
@@ -41,9 +43,15 @@ export class ScanHistoryPage implements OnInit {
   scans: ScanHistoryItem[] = [];
   selectedStatus: (typeof this.statusOptions)[number] = 'ALL';
   selectedProjectId: string = 'ALL';
+  lastUpdatedAt: Date | null = null;
 
   ngOnInit(): void {
+    this.readFiltersFromQueryParams();
     this.loadHistory();
+  }
+
+  get hasActiveFilters(): boolean {
+    return this.selectedStatus !== 'ALL' || this.selectedProjectId !== 'ALL';
   }
 
   get filteredScans(): ScanHistoryItem[] {
@@ -76,12 +84,24 @@ export class ScanHistoryPage implements OnInit {
 
     if (value && this.statusOptions.includes(value as (typeof this.statusOptions)[number])) {
       this.selectedStatus = value as (typeof this.statusOptions)[number];
+      this.syncFiltersToQueryParams();
     }
   }
 
   setProjectFilter(event: Event): void {
     const value = (event.target as HTMLSelectElement | null)?.value;
     this.selectedProjectId = value && value.length > 0 ? value : 'ALL';
+    this.syncFiltersToQueryParams();
+  }
+
+  clearFilters(): void {
+    this.selectedStatus = 'ALL';
+    this.selectedProjectId = 'ALL';
+    this.syncFiltersToQueryParams();
+  }
+
+  refreshHistory(): void {
+    this.loadHistory();
   }
 
   statusClass(status: string | undefined): string {
@@ -116,8 +136,16 @@ export class ScanHistoryPage implements OnInit {
             const rightTime = right.startedAt ? new Date(right.startedAt).getTime() : 0;
             return rightTime - leftTime;
           });
-          this.selectedStatus = 'ALL';
-          this.selectedProjectId = 'ALL';
+
+          if (
+            this.selectedProjectId !== 'ALL' &&
+            !this.projectOptions.some((project) => String(project.id) === this.selectedProjectId)
+          ) {
+            this.selectedProjectId = 'ALL';
+            this.syncFiltersToQueryParams();
+          }
+
+          this.lastUpdatedAt = new Date();
           this.loading = false;
           this.changeDetectorRef.markForCheck();
         },
@@ -128,6 +156,32 @@ export class ScanHistoryPage implements OnInit {
         },
       });
   }
+
+    private readFiltersFromQueryParams(): void {
+      const queryMap = this.route.snapshot.queryParamMap;
+
+      const statusParam = queryMap.get('status');
+      if (statusParam && this.statusOptions.includes(statusParam as (typeof this.statusOptions)[number])) {
+        this.selectedStatus = statusParam as (typeof this.statusOptions)[number];
+      }
+
+      const projectParam = queryMap.get('project');
+      if (projectParam && /^\d+$/.test(projectParam)) {
+        this.selectedProjectId = projectParam;
+      }
+    }
+
+    private syncFiltersToQueryParams(): void {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        replaceUrl: true,
+        queryParams: {
+          status: this.selectedStatus !== 'ALL' ? this.selectedStatus : null,
+          project: this.selectedProjectId !== 'ALL' ? this.selectedProjectId : null,
+        },
+        queryParamsHandling: 'merge',
+      });
+    }
 
   private loadScansForProjects(projects: ProjectResponse[]) {
     const validProjects = projects.filter((project): project is ProjectResponse & { id: number } =>

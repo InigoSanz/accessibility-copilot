@@ -103,6 +103,62 @@ export class ScanDetailPage implements OnInit {
     return 'status-badge';
   }
 
+  issueSeverityClass(severity: string | undefined): string {
+    return `severity-badge ${this.severityModifier(severity)}`;
+  }
+
+  summarySeverityClass(severity: string | undefined): string {
+    return `severity-item ${this.summarySeverityModifier(severity)}`;
+  }
+
+  private summarySeverityModifier(severity: string | undefined): string {
+    const normalized = this.normalizeSeverity(severity);
+
+    if (normalized === 'critical') {
+      return 'severity-item--critical';
+    }
+
+    if (normalized === 'serious' || normalized === 'high') {
+      return 'severity-item--serious';
+    }
+
+    if (normalized === 'moderate' || normalized === 'medium') {
+      return 'severity-item--moderate';
+    }
+
+    if (normalized === 'minor' || normalized === 'low') {
+      return 'severity-item--minor';
+    }
+
+    return '';
+  }
+
+  private severityModifier(severity: string | undefined): string {
+    const normalized = this.normalizeSeverity(severity);
+
+    if (normalized === 'critical') {
+      return 'severity-badge--critical';
+    }
+
+    if (normalized === 'serious' || normalized === 'high') {
+      return 'severity-badge--serious';
+    }
+
+    if (normalized === 'moderate' || normalized === 'medium') {
+      return 'severity-badge--moderate';
+    }
+
+    if (normalized === 'minor' || normalized === 'low') {
+      return 'severity-badge--minor';
+    }
+
+    return '';
+  }
+
+  private normalizeSeverity(value: string | undefined): string {
+    return (value ?? '').trim().toLowerCase();
+  }
+
   private loadScanWithPolling(scanId: number): void {
     timer(0, ScanDetailPage.POLLING_INTERVAL_MS)
       .pipe(

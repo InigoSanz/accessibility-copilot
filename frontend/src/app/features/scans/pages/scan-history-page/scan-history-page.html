@@ -13,6 +13,10 @@
       <p>{{ filteredScans.length }} of {{ scans.length }} scan(s)</p>
     </div>
 
+    @if (lastUpdatedAt) {
+      <p class="last-updated">Updated {{ lastUpdatedAt | date: 'shortTime' }}</p>
+    }
+
     @if (!loading && !error && scans.length > 0) {
       <article class="surface-card filters-panel" aria-label="Scan filters">
         <div class="filters-grid">
@@ -38,6 +42,16 @@
               }
             </select>
           </div>
+        </div>
+
+        <div class="filter-actions">
+          <button class="btn btn-ghost" type="button" (click)="refreshHistory()">Refresh data</button>
+
+          @if (hasActiveFilters) {
+            <button class="btn btn-secondary" type="button" (click)="clearFilters()">
+              Clear filters
+            </button>
+          }
         </div>
       </article>
     }

@@ -80,7 +80,7 @@
             @if (summary.bySeverity) {
               <div class="severity-list" role="list" aria-label="Issues by severity">
                 @for (severity of summary.bySeverity | keyvalue; track severity.key) {
-                  <div class="severity-item" role="listitem">
+                  <div [class]="summarySeverityClass(severity.key)" role="listitem">
                     <span>{{ severity.key }}</span>
                     <strong>{{ severity.value }}</strong>
                   </div>
@@ -111,7 +111,7 @@
               <article class="surface-card issue-card" role="listitem">
                 <div class="issue-header">
                   <strong class="issue-rule">{{ issue.ruleCode || 'Unknown rule' }}</strong>
-                  <span class="issue-severity">{{ issue.severity || 'UNKNOWN' }}</span>
+                  <span [class]="issueSeverityClass(issue.severity)">{{ issue.severity || 'UNKNOWN' }}</span>
                 </div>
 
                 <p class="issue-message">{{ issue.message || 'No message provided.' }}</p>

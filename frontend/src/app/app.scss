@@ -16,7 +16,7 @@
 .app-topbar__inner {
 	width: min(1160px, 100% - 2rem);
 	margin: 0 auto;
-	min-height: 76px;
+	min-height: 62px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -31,8 +31,10 @@
 }
 
 .brand__logo {
-	width: 44px;
-	height: 44px;
+	width: 100px;
+	height: 100px;
+	display: block;
+	margin-block: -14px;
 	object-fit: contain;
 }
 
@@ -42,7 +44,7 @@
 
 	strong {
 		color: var(--ac-text-strong);
-		font-size: 1rem;
+		font-size: 1.3rem;
 		letter-spacing: 0.01em;
 	}
 
@@ -87,7 +89,13 @@
 
 @media (max-width: 720px) {
 	.app-topbar__inner {
-		min-height: 66px;
+		min-height: 58px;
+	}
+
+	.brand__logo {
+		width: 42px;
+		height: 42px;
+		margin-block: 0;
 	}
 
 	.brand__text span {

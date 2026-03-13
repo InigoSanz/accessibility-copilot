@@ -36,4 +36,11 @@ export const routes: Routes = [
         (m) => m.ProjectListPage,
       ),
   },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./layout/pages/not-found-page/not-found-page').then(
+        (m) => m.NotFoundPage,
+      ),
+  },
 ];

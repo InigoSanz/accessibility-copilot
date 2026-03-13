@@ -18,6 +18,11 @@ export class App {
 
   constructor(private readonly router: Router) {}
 
+  navigateTo(path: '/projects' | '/scans', event: MouseEvent): void {
+    event.preventDefault();
+    this.router.navigateByUrl(path);
+  }
+
   isProjectsRouteActive(): boolean {
     return this.router.isActive('/projects', this.matchOptions);
   }

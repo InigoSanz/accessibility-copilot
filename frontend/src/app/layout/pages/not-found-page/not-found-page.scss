@@ -1,0 +1,47 @@
+.not-found-card {
+  padding: 1.2rem;
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.not-found-logo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+
+.not-found-content {
+  display: grid;
+  gap: 0.55rem;
+
+  h2 {
+    color: var(--ac-text-strong);
+    font-size: 1.25rem;
+  }
+
+  p {
+    color: var(--ac-text-default);
+  }
+}
+
+.not-found-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.15rem;
+}
+
+@media (max-width: 640px) {
+  .not-found-card {
+    grid-template-columns: 1fr;
+    justify-items: start;
+    padding: 1rem;
+  }
+
+  .not-found-logo {
+    width: 60px;
+    height: 60px;
+  }
+}

@@ -3,8 +3,16 @@
   gap: 0.85rem;
 }
 
+.last-updated {
+  margin: 0;
+  color: var(--ac-text-muted);
+  font-size: 0.82rem;
+}
+
 .filters-panel {
   padding: 0.9rem 1rem;
+  display: grid;
+  gap: 0.75rem;
 }
 
 .filters-grid {
@@ -25,6 +33,12 @@
   padding: 0.62rem 0.72rem;
   color: var(--ac-text-strong);
   background: var(--ac-surface);
+}
+
+.filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .history-list {
@@ -73,6 +87,14 @@
 @media (max-width: 640px) {
   .filters-grid {
     grid-template-columns: 1fr;
+  }
+
+  .filter-actions {
+    width: 100%;
+
+    .btn {
+      width: 100%;
+    }
   }
 
   .history-card {

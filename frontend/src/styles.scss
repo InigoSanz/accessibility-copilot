@@ -18,6 +18,14 @@
   --ac-warning-text: #8b5b07;
   --ac-error-bg: #fff1f2;
   --ac-error-text: #9f1d2b;
+  --ac-critical-bg: #fff2f2;
+  --ac-critical-text: #b42318;
+  --ac-serious-bg: #fff6ee;
+  --ac-serious-text: #b54708;
+  --ac-moderate-bg: #fffbe8;
+  --ac-moderate-text: #9a6900;
+  --ac-minor-bg: #f2f7ff;
+  --ac-minor-text: #1e4fa6;
   --ac-danger-border: #f9b7c0;
   --ac-shadow-sm: 0 4px 14px rgba(15, 58, 130, 0.08);
   --ac-shadow-md: 0 12px 28px rgba(15, 58, 130, 0.12);
@@ -270,6 +278,64 @@ select:focus-visible {
   border-color: #f5a3b3;
   color: #a0182a;
   background: #fff3f4;
+}
+
+.severity-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.23rem 0.52rem;
+  border: 1px solid var(--ac-border);
+  background: var(--ac-surface-soft);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ac-text-muted);
+}
+
+.severity-badge--critical {
+  background: var(--ac-critical-bg);
+  color: var(--ac-critical-text);
+  border-color: color-mix(in srgb, var(--ac-critical-text) 22%, white);
+}
+
+.severity-badge--serious {
+  background: var(--ac-serious-bg);
+  color: var(--ac-serious-text);
+  border-color: color-mix(in srgb, var(--ac-serious-text) 24%, white);
+}
+
+.severity-badge--moderate {
+  background: var(--ac-moderate-bg);
+  color: var(--ac-moderate-text);
+  border-color: color-mix(in srgb, var(--ac-moderate-text) 24%, white);
+}
+
+.severity-badge--minor {
+  background: var(--ac-minor-bg);
+  color: var(--ac-minor-text);
+  border-color: color-mix(in srgb, var(--ac-minor-text) 24%, white);
+}
+
+.severity-item--critical {
+  border-color: color-mix(in srgb, var(--ac-critical-text) 20%, white);
+  background: var(--ac-critical-bg);
+}
+
+.severity-item--serious {
+  border-color: color-mix(in srgb, var(--ac-serious-text) 20%, white);
+  background: var(--ac-serious-bg);
+}
+
+.severity-item--moderate {
+  border-color: color-mix(in srgb, var(--ac-moderate-text) 22%, white);
+  background: var(--ac-moderate-bg);
+}
+
+.severity-item--minor {
+  border-color: color-mix(in srgb, var(--ac-minor-text) 22%, white);
+  background: var(--ac-minor-bg);
 }
 
 @keyframes pulse-running {
