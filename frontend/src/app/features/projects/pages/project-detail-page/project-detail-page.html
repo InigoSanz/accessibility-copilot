@@ -28,7 +28,7 @@
         [disabled]="runningScan || !project"
       >
         @if (runningScan) {
-          Running scan...
+          Starting scan...
         } @else {
           Run scan
         }
@@ -57,9 +57,13 @@
       <div class="scan-list" role="list" aria-label="Project scans">
         @for (scan of scans; track scan.id) {
           <article class="scan-card" role="listitem">
-            <p class="scan-status">{{ scan.status }}</p>
+            <p class="scan-status">
+              <span [class]="statusClass(scan.status)">{{ scan.status || 'N/A' }}</span>
+            </p>
             <p class="scan-meta">Started {{ scan.startedAt | date: 'medium' }}</p>
-            <p class="scan-meta">Finished {{ scan.finishedAt | date: 'medium' }}</p>
+            <p class="scan-meta">
+              Finished {{ scan.finishedAt ? (scan.finishedAt | date: 'medium') : 'N/A' }}
+            </p>
             @if (scan.id) {
               <a class="secondary-button" [routerLink]="['/scans', scan.id]">View results</a>
             }

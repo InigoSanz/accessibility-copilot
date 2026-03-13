@@ -1,11 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { EMPTY, timer } from 'rxjs';
+import { catchError, switchMap, takeWhile, tap } from 'rxjs/operators';
 
+import { AccessibilityIssueResponse } from '../../../../api-client/model/accessibilityIssueResponse';
 import { ScanResponse } from '../../../../api-client/model/scanResponse';
-import { ProjectService } from '../../../../core/services/project.service';
-
-type Scan = ScanResponse;
+import { ScanSummaryResponse } from '../../../../api-client/model/scanSummaryResponse';
+import { ScanService } from '../../../../core/services/scan.service';
 
 @Component({
   selector: 'app-scan-detail-page',
@@ -15,15 +18,21 @@ type Scan = ScanResponse;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScanDetailPage implements OnInit {
+  private static readonly POLLING_INTERVAL_MS = 4000;
+
   private readonly route = inject(ActivatedRoute);
-  private readonly projectService = inject(ProjectService);
+  private readonly scanService = inject(ScanService);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   loading = true;
   error: string | null = null;
-  scan: Scan | null = null;
+  isPolling = false;
+  scan: ScanResponse | null = null;
+  summary: ScanSummaryResponse | null = null;
+  issues: AccessibilityIssueResponse[] = [];
 
-  readonly durationText = computed(() => {
+  get durationText(): string | null {
     if (!this.scan?.startedAt || !this.scan?.finishedAt) {
       return null;
     }
@@ -44,7 +53,7 @@ export class ScanDetailPage implements OnInit {
     }
 
     return `${minutes}m ${seconds}s`;
-  });
+  }
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -59,18 +68,69 @@ export class ScanDetailPage implements OnInit {
 
     this.loading = true;
     this.error = null;
+    this.loadScanWithPolling(scanId);
+  }
 
-    this.projectService.getScanById(scanId).subscribe({
-      next: (scan) => {
-        this.scan = scan;
-        this.loading = false;
-        this.changeDetectorRef.markForCheck();
-      },
-      error: () => {
-        this.error = 'Could not load scan details. Please try again.';
-        this.loading = false;
-        this.changeDetectorRef.markForCheck();
-      },
-    });
+  get isRunning(): boolean {
+    return this.scanService.isRunning(this.scan?.status);
+  }
+
+  get isCompleted(): boolean {
+    return this.scan?.status === 'COMPLETED';
+  }
+
+  get isFailed(): boolean {
+    return this.scan?.status === 'FAILED';
+  }
+
+  get showNoIssuesMessage(): boolean {
+    return !this.isRunning && this.issues.length === 0;
+  }
+
+  statusClass(status: string | undefined): string {
+    if (status === 'RUNNING') {
+      return 'status-badge status-badge--running';
+    }
+
+    if (status === 'COMPLETED') {
+      return 'status-badge status-badge--completed';
+    }
+
+    if (status === 'FAILED') {
+      return 'status-badge status-badge--failed';
+    }
+
+    return 'status-badge';
+  }
+
+  private loadScanWithPolling(scanId: number): void {
+    timer(0, ScanDetailPage.POLLING_INTERVAL_MS)
+      .pipe(
+        switchMap(() => this.scanService.getScanDetailData(scanId)),
+        tap((scanDetail) => {
+          this.scan = scanDetail.scan;
+          this.summary = scanDetail.summary;
+          this.issues = scanDetail.issues;
+          this.loading = false;
+          this.error = null;
+          this.isPolling = this.scanService.isRunning(scanDetail.scan.status);
+          this.changeDetectorRef.markForCheck();
+        }),
+        takeWhile((scanDetail) => this.scanService.isRunning(scanDetail.scan.status), true),
+        catchError(() => {
+          this.error = 'Could not load scan details. Please try again.';
+          this.loading = false;
+          this.isPolling = false;
+          this.changeDetectorRef.markForCheck();
+          return EMPTY;
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        complete: () => {
+          this.isPolling = false;
+          this.changeDetectorRef.markForCheck();
+        },
+      });
   }
 }

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { ProjectResponse } from '../../../../api-client/model/projectResponse';
 import { ScanResponse } from '../../../../api-client/model/scanResponse';
@@ -15,6 +15,7 @@ import { ProjectService } from '../../../../core/services/project.service';
 })
 export class ProjectDetailPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly projectService = inject(ProjectService);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -94,11 +95,15 @@ export class ProjectDetailPage implements OnInit {
     this.changeDetectorRef.markForCheck();
 
     this.projectService.runScan(projectId).subscribe({
-      next: () => {
+      next: (scan) => {
         this.runningScan = false;
-        this.runScanSuccess = 'Scan completed successfully.';
+        this.runScanSuccess = 'Scan started. Waiting for backend processing...';
         this.changeDetectorRef.markForCheck();
         this.loadScans(projectId);
+
+        if (typeof scan.id === 'number') {
+          this.router.navigate(['/scans', scan.id]);
+        }
       },
       error: () => {
         this.runningScan = false;
@@ -106,5 +111,21 @@ export class ProjectDetailPage implements OnInit {
         this.changeDetectorRef.markForCheck();
       },
     });
+  }
+
+  statusClass(status: string | undefined): string {
+    if (status === 'RUNNING') {
+      return 'status-badge status-badge--running';
+    }
+
+    if (status === 'COMPLETED') {
+      return 'status-badge status-badge--completed';
+    }
+
+    if (status === 'FAILED') {
+      return 'status-badge status-badge--failed';
+    }
+
+    return 'status-badge';
   }
 }

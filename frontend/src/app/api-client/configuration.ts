@@ -124,6 +124,10 @@ constructor({ accessToken, apiKeys, basePath, credentials, encodeParam, encoder,
             return undefined;
         }
 
+        if (accepts.includes('*/*')) {
+            return 'application/json';
+        }
+
         const type = accepts.find((x: string) => this.isJsonMime(x));
         if (type === undefined) {
             return accepts[0];
@@ -143,7 +147,11 @@ constructor({ accessToken, apiKeys, basePath, credentials, encodeParam, encoder,
      */
     public isJsonMime(mime: string): boolean {
         const jsonMime: RegExp = new RegExp('^(application\/json|[^;/ \t]+\/[^;/ \t]+[+]json)[ \t]*(;.*)?$', 'i');
-        return mime !== null && (jsonMime.test(mime) || mime.toLowerCase() === 'application/json-patch+json');
+        return mime !== null && (
+            jsonMime.test(mime)
+            || mime.toLowerCase() === 'application/json-patch+json'
+            || mime.trim() === '*/*'
+        );
     }
 
     public lookupCredential(key: string): string | undefined {

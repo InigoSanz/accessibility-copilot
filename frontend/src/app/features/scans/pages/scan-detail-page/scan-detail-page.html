@@ -4,17 +4,29 @@
   }
 
   <section class="detail-section" aria-labelledby="scan-overview-title">
-    <h1 id="scan-overview-title">Scan Overview</h1>
+    <h1 id="scan-overview-title">Scan overview</h1>
 
     @if (loading) {
-      <p class="status-message">Loading scan...</p>
+      <p class="status-message">Loading scan, summary and issues...</p>
     } @else if (error) {
       <p class="status-message status-message--error">{{ error }}</p>
     } @else if (scan) {
       <article class="scan-card">
         <div class="overview-row">
+          <span class="label">Scan id</span>
+          <span class="value">{{ scan.id ?? 'N/A' }}</span>
+        </div>
+
+        <div class="overview-row">
+          <span class="label">Project id</span>
+          <span class="value">{{ scan.projectId ?? 'N/A' }}</span>
+        </div>
+
+        <div class="overview-row">
           <span class="label">Status</span>
-          <span class="value">{{ scan.status || 'N/A' }}</span>
+          <span class="value">
+            <span [class]="statusClass(scan.status)">{{ scan.status || 'N/A' }}</span>
+          </span>
         </div>
 
         <div class="overview-row">
@@ -27,13 +39,84 @@
           <span class="value">{{ scan.finishedAt ? (scan.finishedAt | date: 'medium') : 'N/A' }}</span>
         </div>
 
-        @if (durationText()) {
+        @if (isPolling) {
+          <p class="inline-info">Auto-refreshing while scan is RUNNING...</p>
+        }
+
+        @if (durationText) {
           <div class="overview-row">
             <span class="label">Approx. duration</span>
-            <span class="value">{{ durationText() }}</span>
+            <span class="value">{{ durationText }}</span>
           </div>
         }
       </article>
+
+      @if (isFailed) {
+        <article class="status-message status-message--error">
+          <h2>Scan failed</h2>
+          <p>The backend reported this scan as FAILED.</p>
+        </article>
+      }
+
+      <section class="detail-section" aria-labelledby="scan-summary-title">
+        <h2 id="scan-summary-title">Summary</h2>
+
+        @if (summary) {
+          <article class="scan-card">
+            <div class="overview-row">
+              <span class="label">Total issues</span>
+              <span class="value">{{ summary.totalIssues ?? 0 }}</span>
+            </div>
+
+            @if (summary.bySeverity) {
+              <div class="severity-list" role="list" aria-label="Issues by severity">
+                @for (severity of summary.bySeverity | keyvalue; track severity.key) {
+                  <div class="severity-item" role="listitem">
+                    <span>{{ severity.key }}</span>
+                    <strong>{{ severity.value }}</strong>
+                  </div>
+                }
+              </div>
+            }
+          </article>
+        } @else if (isRunning) {
+          <p class="status-message">Summary is still being generated while the scan is running.</p>
+        } @else {
+          <p class="status-message">Summary is not available for this scan.</p>
+        }
+      </section>
+
+      <section class="detail-section" aria-labelledby="scan-issues-title">
+        <h2 id="scan-issues-title">Issues</h2>
+
+        @if (isRunning && issues.length === 0) {
+          <p class="status-message">Scan is still running. Issues will appear as soon as they are available.</p>
+        } @else if (showNoIssuesMessage) {
+          <p class="status-message">No issues were found for this scan.</p>
+        } @else {
+          <div class="issues-list" role="list" aria-label="Scan issues">
+            @for (issue of issues; track issue.id ?? $index) {
+              <article class="scan-card" role="listitem">
+                <div class="issue-header">
+                  <strong>{{ issue.ruleCode || 'Unknown rule' }}</strong>
+                  <span class="issue-severity">{{ issue.severity || 'UNKNOWN' }}</span>
+                </div>
+
+                <p class="issue-message">{{ issue.message || 'No message provided.' }}</p>
+
+                <div class="issue-meta">
+                  <span><strong>WCAG:</strong> {{ issue.wcagCriterion || 'N/A' }}</span>
+                  <span><strong>Selector:</strong> {{ issue.selector || 'N/A' }}</span>
+                </div>
+
+                @if (issue.pageUrl) {
+                  <a [href]="issue.pageUrl" target="_blank" rel="noopener noreferrer">{{ issue.pageUrl }}</a>
+                }
+              </article>
+            }
+          </div>
+        }
+      </section>
     }
   </section>
 </section>
