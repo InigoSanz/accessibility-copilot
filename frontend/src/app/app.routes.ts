@@ -7,6 +7,14 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'scans',
+    pathMatch: 'full',
+    loadComponent: () =>
+      import('./features/scans/pages/scan-history-page/scan-history-page').then(
+        (m) => m.ScanHistoryPage,
+      ),
+  },
+  {
     path: 'scans/:id',
     loadComponent: () =>
       import('./features/scans/pages/scan-detail-page/scan-detail-page').then(

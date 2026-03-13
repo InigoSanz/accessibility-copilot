@@ -1,0 +1,58 @@
+.history-section {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.history-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.history-card {
+  padding: 1rem 1.1rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.history-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.scan-title {
+  color: var(--ac-text-strong);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.project-ref {
+  color: var(--ac-text-muted);
+  font-size: 0.86rem;
+  margin-top: 0.18rem;
+}
+
+.history-metadata {
+  display: grid;
+  gap: 0.3rem;
+  color: var(--ac-text-default);
+  font-size: 0.9rem;
+}
+
+.history-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .history-card {
+    padding: 0.88rem;
+  }
+
+  .history-card__head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

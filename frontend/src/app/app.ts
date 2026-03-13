@@ -21,4 +21,8 @@ export class App {
   isProjectsRouteActive(): boolean {
     return this.router.isActive('/projects', this.matchOptions);
   }
+
+  isScansRouteActive(): boolean {
+    return this.router.isActive('/scans', this.matchOptions);
+  }
 }

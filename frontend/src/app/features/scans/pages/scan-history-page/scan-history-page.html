@@ -1,0 +1,53 @@
+<section class="scan-history-page page-shell">
+  <header class="page-hero" aria-labelledby="scan-history-title">
+    <span class="page-hero__eyebrow">Scan history</span>
+    <h1 id="scan-history-title">All scans across projects</h1>
+    <p>
+      Track scan activity in one unified timeline and quickly open project or scan details.
+    </p>
+  </header>
+
+  <section class="history-section" aria-labelledby="history-list-title">
+    <div class="section-head">
+      <h2 id="history-list-title">Recent scans</h2>
+      <p>{{ scans.length }} scan(s)</p>
+    </div>
+
+    @if (loading) {
+      <p class="status-message">Loading scan history...</p>
+    } @else if (error) {
+      <p class="status-message status-message--error">{{ error }}</p>
+    } @else if (scans.length === 0) {
+      <p class="status-message">No scans yet. Run your first scan from a project page.</p>
+    } @else {
+      <div class="history-list" role="list" aria-label="Scan history list">
+        @for (scan of scans; track scan.scanId ?? $index) {
+          <article class="surface-card history-card" role="listitem">
+            <div class="history-card__head">
+              <div>
+                <p class="scan-title">Scan #{{ scan.scanId ?? 'N/A' }}</p>
+                <p class="project-ref">{{ scan.projectName }}</p>
+              </div>
+              <span [class]="statusClass(scan.status)">{{ scan.status }}</span>
+            </div>
+
+            <div class="history-metadata">
+              <p><strong>Project URL:</strong> {{ scan.projectUrl }}</p>
+              <p><strong>Started:</strong> {{ scan.startedAt ? (scan.startedAt | date: 'medium') : 'N/A' }}</p>
+              <p><strong>Finished:</strong> {{ scan.finishedAt ? (scan.finishedAt | date: 'medium') : 'In progress' }}</p>
+            </div>
+
+            <div class="history-actions">
+              @if (scan.projectId) {
+                <a class="btn btn-ghost" [routerLink]="['/projects', scan.projectId]">Open project</a>
+              }
+              @if (scan.scanId) {
+                <a class="btn btn-secondary" [routerLink]="['/scans', scan.scanId]">Open scan</a>
+              }
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </section>
+</section>
