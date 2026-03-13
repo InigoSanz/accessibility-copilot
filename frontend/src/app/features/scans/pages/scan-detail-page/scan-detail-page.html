@@ -79,7 +79,7 @@
 
             @if (summary.bySeverity) {
               <div class="severity-list" role="list" aria-label="Issues by severity">
-                @for (severity of summary.bySeverity | keyvalue; track severity.key) {
+                @for (severity of orderedSummarySeverities; track severity.key) {
                   <div [class]="summarySeverityClass(severity.key)" role="listitem">
                     <span>{{ severity.key }}</span>
                     <strong>{{ severity.value }}</strong>

@@ -10,6 +10,11 @@ import { ScanResponse } from '../../../../api-client/model/scanResponse';
 import { ScanSummaryResponse } from '../../../../api-client/model/scanSummaryResponse';
 import { ScanService } from '../../../../core/services/scan.service';
 
+interface SummarySeverityItem {
+  key: string;
+  value: number;
+}
+
 @Component({
   selector: 'app-scan-detail-page',
   imports: [CommonModule, DatePipe, RouterLink],
@@ -19,6 +24,7 @@ import { ScanService } from '../../../../core/services/scan.service';
 })
 export class ScanDetailPage implements OnInit {
   private static readonly POLLING_INTERVAL_MS = 4000;
+  private static readonly SUMMARY_SEVERITY_ORDER = ['critical', 'serious', 'moderate', 'minor'] as const;
 
   private readonly route = inject(ActivatedRoute);
   private readonly scanService = inject(ScanService);
@@ -85,6 +91,30 @@ export class ScanDetailPage implements OnInit {
 
   get showNoIssuesMessage(): boolean {
     return !this.isRunning && this.issues.length === 0;
+  }
+
+  get orderedSummarySeverities(): SummarySeverityItem[] {
+    const bySeverity = this.summary?.bySeverity;
+    if (!bySeverity) {
+      return [];
+    }
+
+    const rankBySeverity = new Map<string, number>(
+      ScanDetailPage.SUMMARY_SEVERITY_ORDER.map((severity, index) => [severity, index]),
+    );
+
+    return Object.entries(bySeverity)
+      .map(([key, value]) => ({ key, value }))
+      .sort((left, right) => {
+        const leftRank = rankBySeverity.get(left.key.toLowerCase()) ?? Number.MAX_SAFE_INTEGER;
+        const rightRank = rankBySeverity.get(right.key.toLowerCase()) ?? Number.MAX_SAFE_INTEGER;
+
+        if (leftRank !== rightRank) {
+          return leftRank - rightRank;
+        }
+
+        return left.key.localeCompare(right.key);
+      });
   }
 
   statusClass(status: string | undefined): string {

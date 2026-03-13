@@ -93,6 +93,37 @@
   border: 1px solid var(--ac-border);
   border-radius: var(--ac-radius-sm);
   background: var(--ac-surface-soft);
+
+  span {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.76rem;
+    font-weight: 700;
+  }
+}
+
+.severity-item.severity-item--critical {
+  border-color: color-mix(in srgb, var(--ac-critical-text) 20%, white);
+  background: var(--ac-critical-bg);
+  color: var(--ac-critical-text);
+}
+
+.severity-item.severity-item--serious {
+  border-color: color-mix(in srgb, var(--ac-serious-text) 20%, white);
+  background: var(--ac-serious-bg);
+  color: var(--ac-serious-text);
+}
+
+.severity-item.severity-item--moderate {
+  border-color: color-mix(in srgb, var(--ac-moderate-text) 22%, white);
+  background: var(--ac-moderate-bg);
+  color: var(--ac-moderate-text);
+}
+
+.severity-item.severity-item--minor {
+  border-color: color-mix(in srgb, var(--ac-minor-text) 22%, white);
+  background: var(--ac-minor-bg);
+  color: var(--ac-minor-text);
 }
 
 .issues-list {
