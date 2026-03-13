@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
@@ -25,7 +26,7 @@ interface ProjectFilterOption {
 
 @Component({
   selector: 'app-scan-history-page',
-  imports: [CommonModule, DatePipe, RouterLink],
+  imports: [CommonModule, DatePipe, RouterLink, TranslocoPipe],
   templateUrl: './scan-history-page.html',
   styleUrl: './scan-history-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +36,7 @@ export class ScanHistoryPage implements OnInit {
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly translocoService = inject(TranslocoService);
 
   readonly statusOptions = ['ALL', 'RUNNING', 'COMPLETED', 'FAILED'] as const;
 
@@ -150,7 +152,7 @@ export class ScanHistoryPage implements OnInit {
           this.changeDetectorRef.markForCheck();
         },
         error: () => {
-          this.error = 'Could not load scan history. Please try again.';
+          this.error = this.translocoService.translate('scanHistory.messages.loadError');
           this.loading = false;
           this.changeDetectorRef.markForCheck();
         },
@@ -200,8 +202,8 @@ export class ScanHistoryPage implements OnInit {
             scans.map((scan) => ({
               scanId: scan.id ?? null,
               projectId: project.id,
-              projectName: project.name ?? 'Unnamed project',
-              projectUrl: project.rootUrl ?? 'N/A',
+              projectName: project.name ?? this.translocoService.translate('scanHistory.list.unnamedProject') ?? '',
+              projectUrl: project.rootUrl ?? this.translocoService.translate('common.na') ?? '',
               status: scan.status ?? 'UNKNOWN',
               startedAt: scan.startedAt ?? null,
               finishedAt: scan.finishedAt ?? null,

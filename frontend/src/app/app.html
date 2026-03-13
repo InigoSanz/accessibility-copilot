@@ -5,23 +5,23 @@
 				class="brand"
 				href="/projects"
 				(click)="navigateTo('/projects', $event)"
-				aria-label="Accessibility Copilot home"
+				[attr.aria-label]="'app.navigation.homeAria' | transloco"
 			>
-				<img src="images/logo.png" alt="Accessibility Copilot" class="brand__logo" />
+				<img src="images/logo.png" [attr.alt]="'app.brand.name' | transloco" class="brand__logo" />
 				<div class="brand__text">
-					<strong>Accessibility Copilot</strong>
-					<span>Accessibility scanning workspace</span>
+					<strong>{{ 'app.brand.name' | transloco }}</strong>
+					<span>{{ 'app.brand.tagline' | transloco }}</span>
 				</div>
 			</a>
 
-			<nav class="topbar-nav" aria-label="Main navigation">
+			<nav class="topbar-nav" [attr.aria-label]="'app.navigation.mainAria' | transloco">
 				<a
 					href="/projects"
 					(click)="navigateTo('/projects', $event)"
 					[class.topbar-nav__link--active]="isProjectsRouteActive()"
 					class="topbar-nav__link"
 				>
-					Projects
+					{{ 'app.navigation.projects' | transloco }}
 				</a>
 				<a
 					href="/scans"
@@ -29,9 +29,25 @@
 					[class.topbar-nav__link--active]="isScansRouteActive()"
 					class="topbar-nav__link"
 				>
-					Scans
+					{{ 'app.navigation.scans' | transloco }}
 				</a>
 			</nav>
+
+			<div class="language-switcher">
+				<label for="language-selector">{{ 'app.language.label' | transloco }}</label>
+				<div class="language-switcher__control">
+				<select
+					id="language-selector"
+					[value]="selectedLanguage()"
+					(change)="onLanguageChange($event)"
+				>
+					@for (language of availableLanguages; track language) {
+						<option [value]="language">{{ ('app.language.options.' + language) | transloco }}</option>
+					}
+				</select>
+					<img class="language-switcher__flag" [src]="selectedLanguageFlagPath()" alt="" aria-hidden="true" />
+				</div>
+			</div>
 		</div>
 	</header>
 
@@ -39,13 +55,13 @@
 		<router-outlet></router-outlet>
 	</main>
 
-	<footer class="app-footer" aria-label="Footer">
+	<footer class="app-footer" [attr.aria-label]="'app.footer.aria' | transloco">
 		<div class="app-footer__inner">
-			<p class="app-footer__brand">Accessibility Copilot · © 2026</p>
+			<p class="app-footer__brand">{{ 'app.footer.brand' | transloco }} · © 2026</p>
 
-			<nav class="app-footer__nav" aria-label="Footer navigation">
-				<a href="/projects" (click)="navigateTo('/projects', $event)">Projects</a>
-				<a href="/scans" (click)="navigateTo('/scans', $event)">Scans</a>
+			<nav class="app-footer__nav" [attr.aria-label]="'app.footer.navigationAria' | transloco">
+				<a href="/projects" (click)="navigateTo('/projects', $event)">{{ 'app.navigation.projects' | transloco }}</a>
+				<a href="/scans" (click)="navigateTo('/scans', $event)">{{ 'app.navigation.scans' | transloco }}</a>
 			</nav>
 		</div>
 	</footer>

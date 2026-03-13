@@ -60,6 +60,45 @@
 	gap: 0.5rem;
 }
 
+.language-switcher {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45rem;
+
+	label {
+		font-size: 0.78rem;
+		font-weight: 600;
+		color: var(--ac-text-muted);
+	}
+
+	.language-switcher__control {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+	}
+
+	select {
+		min-width: 64px;
+		height: 34px;
+		padding: 0 0.45rem;
+		border: 1px solid var(--ac-border-strong);
+		border-radius: 9px;
+		background: var(--ac-surface);
+		color: var(--ac-text-default);
+		font-size: 0.82rem;
+		font-weight: 600;
+	}
+
+	.language-switcher__flag {
+		width: 24px;
+		height: 16px;
+		object-fit: cover;
+		border-radius: 3px;
+		border: 1px solid var(--ac-border-strong);
+		background: var(--ac-surface);
+	}
+}
+
 .topbar-nav__link {
 	text-decoration: none;
 	color: var(--ac-text-default);
@@ -141,6 +180,10 @@
 
 	.app-main {
 		padding-top: 1.25rem;
+	}
+
+	.language-switcher label {
+		display: none;
 	}
 
 	.app-footer__inner {

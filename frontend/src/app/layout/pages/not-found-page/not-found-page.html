@@ -1,20 +1,20 @@
-<section class="not-found-page page-shell" aria-labelledby="not-found-title">
+<section class="not-found-page page-shell" aria-labelledby="not-found-title" *transloco="let t">
   <header class="page-hero">
-    <span class="page-hero__eyebrow">Navigation</span>
-    <h1 id="not-found-title">Page not found</h1>
-    <p>The page you requested does not exist or has been moved.</p>
+    <span class="page-hero__eyebrow">{{ t('notFound.hero.eyebrow') }}</span>
+    <h1 id="not-found-title">{{ t('notFound.hero.title') }}</h1>
+    <p>{{ t('notFound.hero.description') }}</p>
   </header>
 
   <article class="surface-card not-found-card">
-    <img src="images/logo.png" alt="Accessibility Copilot" class="not-found-logo" />
+    <img src="images/logo.png" [attr.alt]="t('app.brand.name')" class="not-found-logo" />
 
     <div class="not-found-content">
-      <h2>Let’s get you back on track</h2>
-      <p>Use one of these shortcuts to return to a valid workspace page.</p>
+      <h2>{{ t('notFound.content.title') }}</h2>
+      <p>{{ t('notFound.content.description') }}</p>
 
       <div class="not-found-actions">
-        <a class="btn btn-primary" routerLink="/projects">Go to projects</a>
-        <a class="btn btn-secondary" routerLink="/scans">Go to scans</a>
+        <a class="btn btn-primary" routerLink="/projects">{{ t('notFound.actions.projects') }}</a>
+        <a class="btn btn-secondary" routerLink="/scans">{{ t('notFound.actions.scans') }}</a>
       </div>
     </div>
   </article>

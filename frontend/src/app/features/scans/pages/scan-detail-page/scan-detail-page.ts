@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inje
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { EMPTY, timer } from 'rxjs';
 import { catchError, switchMap, takeWhile, tap } from 'rxjs/operators';
 
@@ -17,7 +18,7 @@ interface SummarySeverityItem {
 
 @Component({
   selector: 'app-scan-detail-page',
-  imports: [CommonModule, DatePipe, RouterLink],
+  imports: [CommonModule, DatePipe, RouterLink, TranslocoPipe],
   templateUrl: './scan-detail-page.html',
   styleUrl: './scan-detail-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,6 +31,7 @@ export class ScanDetailPage implements OnInit {
   private readonly scanService = inject(ScanService);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly translocoService = inject(TranslocoService);
 
   loading = true;
   error: string | null = null;
@@ -55,10 +57,10 @@ export class ScanDetailPage implements OnInit {
     const seconds = totalSeconds % 60;
 
     if (minutes === 0) {
-      return `${seconds}s`;
+      return this.translocoService.translate('scanDetail.duration.secondsOnly', { seconds });
     }
 
-    return `${minutes}m ${seconds}s`;
+    return this.translocoService.translate('scanDetail.duration.minutesAndSeconds', { minutes, seconds });
   }
 
   ngOnInit(): void {
@@ -67,7 +69,7 @@ export class ScanDetailPage implements OnInit {
 
     if (!idParam || !Number.isInteger(scanId) || scanId <= 0) {
       this.loading = false;
-      this.error = 'Invalid scan id.';
+      this.error = this.translocoService.translate('scanDetail.messages.invalidScanId');
       this.changeDetectorRef.markForCheck();
       return;
     }
@@ -204,7 +206,7 @@ export class ScanDetailPage implements OnInit {
         }),
         takeWhile((scanDetail) => this.scanService.isRunning(scanDetail.scan.status), true),
         catchError(() => {
-          this.error = 'Could not load scan details. Please try again.';
+          this.error = this.translocoService.translate('scanDetail.messages.loadError');
           this.loading = false;
           this.isPolling = false;
           this.changeDetectorRef.markForCheck();

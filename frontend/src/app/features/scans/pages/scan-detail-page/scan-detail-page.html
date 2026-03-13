@@ -1,48 +1,48 @@
 <section class="scan-detail-page page-shell">
   @if (scan?.projectId) {
-    <a class="back-link" [routerLink]="['/projects', scan?.projectId]">← Back to project</a>
+    <a class="back-link" [routerLink]="['/projects', scan?.projectId]">← {{ 'scanDetail.backToProject' | transloco }}</a>
   }
 
   <header class="page-hero" aria-labelledby="scan-overview-title">
-    <span class="page-hero__eyebrow">Scan detail</span>
-    <h1 id="scan-overview-title">Scan lifecycle and findings</h1>
-    <p>Track scan status, monitor summary metrics and inspect accessibility issues in detail.</p>
+    <span class="page-hero__eyebrow">{{ 'scanDetail.hero.eyebrow' | transloco }}</span>
+    <h1 id="scan-overview-title">{{ 'scanDetail.hero.title' | transloco }}</h1>
+    <p>{{ 'scanDetail.hero.description' | transloco }}</p>
   </header>
 
   <section class="detail-section" aria-labelledby="scan-state-title">
     <div class="section-head">
-      <h2 id="scan-state-title">Scan overview</h2>
+      <h2 id="scan-state-title">{{ 'scanDetail.overview.title' | transloco }}</h2>
       @if (scan) {
-        <span [class]="statusClass(scan.status)">{{ scan.status || 'N/A' }}</span>
+        <span [class]="statusClass(scan.status)">{{ ('status.' + (scan.status?.toLowerCase() ?? 'unknown')) | transloco }}</span>
       }
     </div>
 
     @if (loading) {
-      <p class="status-message">Loading scan, summary and issues...</p>
+      <p class="status-message">{{ 'scanDetail.messages.loading' | transloco }}</p>
     } @else if (error) {
       <p class="status-message status-message--error">{{ error }}</p>
     } @else if (scan) {
       <article class="surface-card scan-overview-card">
         <div class="overview-grid">
           <div class="overview-item">
-            <span class="label">Scan ID</span>
-            <strong class="value">{{ scan.id ?? 'N/A' }}</strong>
+            <span class="label">{{ 'scanDetail.overview.scanId' | transloco }}</span>
+            <strong class="value">{{ scan.id ?? ('common.na' | transloco) }}</strong>
           </div>
           <div class="overview-item">
-            <span class="label">Project ID</span>
-            <strong class="value">{{ scan.projectId ?? 'N/A' }}</strong>
+            <span class="label">{{ 'scanDetail.overview.projectId' | transloco }}</span>
+            <strong class="value">{{ scan.projectId ?? ('common.na' | transloco) }}</strong>
           </div>
           <div class="overview-item">
-            <span class="label">Started at</span>
-            <strong class="value">{{ scan.startedAt ? (scan.startedAt | date: 'medium') : 'N/A' }}</strong>
+            <span class="label">{{ 'scanDetail.overview.startedAt' | transloco }}</span>
+            <strong class="value">{{ scan.startedAt ? (scan.startedAt | date: 'medium') : ('common.na' | transloco) }}</strong>
           </div>
           <div class="overview-item">
-            <span class="label">Finished at</span>
-            <strong class="value">{{ scan.finishedAt ? (scan.finishedAt | date: 'medium') : 'In progress' }}</strong>
+            <span class="label">{{ 'scanDetail.overview.finishedAt' | transloco }}</span>
+            <strong class="value">{{ scan.finishedAt ? (scan.finishedAt | date: 'medium') : ('common.inProgress' | transloco) }}</strong>
           </div>
           @if (durationText) {
             <div class="overview-item">
-              <span class="label">Duration</span>
+              <span class="label">{{ 'scanDetail.overview.duration' | transloco }}</span>
               <strong class="value">{{ durationText }}</strong>
             </div>
           }
@@ -50,38 +50,38 @@
 
         @if (isPolling) {
           <p class="status-message status-message--warning running-info">
-            Auto-refreshing this scan while backend status is RUNNING.
+            {{ 'scanDetail.messages.polling' | transloco }}
           </p>
         }
       </article>
 
       @if (isFailed) {
         <article class="status-message status-message--error failed-block">
-          <h2>Scan failed</h2>
-          <p>This scan ended in FAILED state. Review backend logs for execution details.</p>
+          <h2>{{ 'scanDetail.failed.title' | transloco }}</h2>
+          <p>{{ 'scanDetail.failed.description' | transloco }}</p>
         </article>
       }
 
       <section class="detail-section" aria-labelledby="scan-summary-title">
         <div class="section-head">
-          <h2 id="scan-summary-title">Summary</h2>
+          <h2 id="scan-summary-title">{{ 'scanDetail.summary.title' | transloco }}</h2>
           @if (summary?.totalIssues !== undefined) {
-            <p>{{ summary?.totalIssues }} total issue(s)</p>
+            <p>{{ 'scanDetail.summary.totalCount' | transloco: { count: summary?.totalIssues } }}</p>
           }
         </div>
 
         @if (summary) {
           <article class="surface-card summary-card">
             <div class="summary-total">
-              <span>Total issues</span>
+              <span>{{ 'scanDetail.summary.totalIssues' | transloco }}</span>
               <strong>{{ summary.totalIssues ?? 0 }}</strong>
             </div>
 
             @if (summary.bySeverity) {
-              <div class="severity-list" role="list" aria-label="Issues by severity">
+              <div class="severity-list" role="list" [attr.aria-label]="'scanDetail.summary.severityAria' | transloco">
                 @for (severity of orderedSummarySeverities; track severity.key) {
                   <div [class]="summarySeverityClass(severity.key)" role="listitem">
-                    <span>{{ severity.key }}</span>
+                    <span>{{ ('severity.' + severity.key.toLowerCase()) | transloco }}</span>
                     <strong>{{ severity.value }}</strong>
                   </div>
                 }
@@ -89,36 +89,36 @@
             }
           </article>
         } @else if (isRunning) {
-          <p class="status-message">Summary is still being generated while the scan is running.</p>
+          <p class="status-message">{{ 'scanDetail.summary.running' | transloco }}</p>
         } @else {
-          <p class="status-message">Summary is not available for this scan.</p>
+          <p class="status-message">{{ 'scanDetail.summary.unavailable' | transloco }}</p>
         }
       </section>
 
       <section class="detail-section" aria-labelledby="scan-issues-title">
         <div class="section-head">
-          <h2 id="scan-issues-title">Issues</h2>
-          <p>{{ issues.length }} item(s)</p>
+          <h2 id="scan-issues-title">{{ 'scanDetail.issues.title' | transloco }}</h2>
+          <p>{{ 'scanDetail.issues.count' | transloco: { count: issues.length } }}</p>
         </div>
 
         @if (isRunning && issues.length === 0) {
-          <p class="status-message">Scan is still running. Issues will appear as soon as they are available.</p>
+          <p class="status-message">{{ 'scanDetail.issues.running' | transloco }}</p>
         } @else if (showNoIssuesMessage) {
-          <p class="status-message">No issues were found for this scan.</p>
+          <p class="status-message">{{ 'scanDetail.issues.empty' | transloco }}</p>
         } @else {
-          <div class="issues-list" role="list" aria-label="Scan issues">
+          <div class="issues-list" role="list" [attr.aria-label]="'scanDetail.issues.aria' | transloco">
             @for (issue of issues; track issue.id ?? $index) {
               <article class="surface-card issue-card" role="listitem">
                 <div class="issue-header">
-                  <strong class="issue-rule">{{ issue.ruleCode || 'Unknown rule' }}</strong>
-                  <span [class]="issueSeverityClass(issue.severity)">{{ issue.severity || 'UNKNOWN' }}</span>
+                  <strong class="issue-rule">{{ issue.ruleCode || ('scanDetail.issues.unknownRule' | transloco) }}</strong>
+                  <span [class]="issueSeverityClass(issue.severity)">{{ ('severity.' + (issue.severity?.toLowerCase() ?? 'unknown')) | transloco }}</span>
                 </div>
 
-                <p class="issue-message">{{ issue.message || 'No message provided.' }}</p>
+                <p class="issue-message">{{ issue.message || ('scanDetail.issues.noMessage' | transloco) }}</p>
 
                 <div class="issue-meta">
-                  <span><strong>WCAG:</strong> {{ issue.wcagCriterion || 'N/A' }}</span>
-                  <span><strong>Selector:</strong> {{ issue.selector || 'N/A' }}</span>
+                  <span><strong>{{ 'scanDetail.issues.wcag' | transloco }}:</strong> {{ issue.wcagCriterion || ('common.na' | transloco) }}</span>
+                  <span><strong>{{ 'scanDetail.issues.selector' | transloco }}:</strong> {{ issue.selector || ('common.na' | transloco) }}</span>
                 </div>
 
                 @if (issue.pageUrl) {

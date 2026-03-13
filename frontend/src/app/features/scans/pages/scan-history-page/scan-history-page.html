@@ -1,42 +1,40 @@
 <section class="scan-history-page page-shell">
   <header class="page-hero" aria-labelledby="scan-history-title">
-    <span class="page-hero__eyebrow">Scan history</span>
-    <h1 id="scan-history-title">All scans across projects</h1>
-    <p>
-      Track scan activity in one unified timeline and quickly open project or scan details.
-    </p>
+    <span class="page-hero__eyebrow">{{ 'scanHistory.hero.eyebrow' | transloco }}</span>
+    <h1 id="scan-history-title">{{ 'scanHistory.hero.title' | transloco }}</h1>
+    <p>{{ 'scanHistory.hero.description' | transloco }}</p>
   </header>
 
   <section class="history-section" aria-labelledby="history-list-title">
     <div class="section-head">
-      <h2 id="history-list-title">Recent scans</h2>
-      <p>{{ filteredScans.length }} of {{ scans.length }} scan(s)</p>
+      <h2 id="history-list-title">{{ 'scanHistory.list.title' | transloco }}</h2>
+      <p>{{ 'scanHistory.list.count' | transloco: { filtered: filteredScans.length, total: scans.length } }}</p>
     </div>
 
     @if (lastUpdatedAt) {
-      <p class="last-updated">Updated {{ lastUpdatedAt | date: 'shortTime' }}</p>
+      <p class="last-updated">{{ 'scanHistory.list.updated' | transloco }} {{ lastUpdatedAt | date: 'shortTime' }}</p>
     }
 
     @if (!loading && !error && scans.length > 0) {
-      <article class="surface-card filters-panel" aria-label="Scan filters">
+      <article class="surface-card filters-panel" [attr.aria-label]="'scanHistory.filters.aria' | transloco">
         <div class="filters-grid">
           <div class="form-field">
-            <label for="status-filter">Status</label>
+            <label for="status-filter">{{ 'scanHistory.filters.status' | transloco }}</label>
             <select id="status-filter" [value]="selectedStatus" (change)="setStatusFilter($event)">
               @for (status of statusOptions; track status) {
-                <option [value]="status">{{ status === 'ALL' ? 'All statuses' : status }}</option>
+                <option [value]="status">{{ status === 'ALL' ? ('scanHistory.filters.allStatuses' | transloco) : (('status.' + status.toLowerCase()) | transloco) }}</option>
               }
             </select>
           </div>
 
           <div class="form-field">
-            <label for="project-filter">Project</label>
+            <label for="project-filter">{{ 'scanHistory.filters.project' | transloco }}</label>
             <select
               id="project-filter"
               [value]="selectedProjectId"
               (change)="setProjectFilter($event)"
             >
-              <option value="ALL">All projects</option>
+              <option value="ALL">{{ 'scanHistory.filters.allProjects' | transloco }}</option>
               @for (project of projectOptions; track project.id) {
                 <option [value]="project.id">{{ project.name }}</option>
               }
@@ -45,11 +43,11 @@
         </div>
 
         <div class="filter-actions">
-          <button class="btn btn-ghost" type="button" (click)="refreshHistory()">Refresh data</button>
+          <button class="btn btn-ghost" type="button" (click)="refreshHistory()">{{ 'scanHistory.filters.refresh' | transloco }}</button>
 
           @if (hasActiveFilters) {
             <button class="btn btn-secondary" type="button" (click)="clearFilters()">
-              Clear filters
+              {{ 'scanHistory.filters.clear' | transloco }}
             </button>
           }
         </div>
@@ -57,37 +55,37 @@
     }
 
     @if (loading) {
-      <p class="status-message">Loading scan history...</p>
+      <p class="status-message">{{ 'scanHistory.messages.loading' | transloco }}</p>
     } @else if (error) {
       <p class="status-message status-message--error">{{ error }}</p>
     } @else if (scans.length === 0) {
-      <p class="status-message">No scans yet. Run your first scan from a project page.</p>
+      <p class="status-message">{{ 'scanHistory.messages.empty' | transloco }}</p>
     } @else if (filteredScans.length === 0) {
-      <p class="status-message">No scans match the selected filters.</p>
+      <p class="status-message">{{ 'scanHistory.messages.noMatches' | transloco }}</p>
     } @else {
-      <div class="history-list" role="list" aria-label="Scan history list">
+      <div class="history-list" role="list" [attr.aria-label]="'scanHistory.list.aria' | transloco">
         @for (scan of filteredScans; track scan.scanId ?? $index) {
           <article class="surface-card history-card" role="listitem">
             <div class="history-card__head">
               <div>
-                <p class="scan-title">Scan #{{ scan.scanId ?? 'N/A' }}</p>
+                <p class="scan-title">{{ 'scanHistory.list.scanNumber' | transloco }} #{{ scan.scanId ?? ('common.na' | transloco) }}</p>
                 <p class="project-ref">{{ scan.projectName }}</p>
               </div>
-              <span [class]="statusClass(scan.status)">{{ scan.status }}</span>
+              <span [class]="statusClass(scan.status)">{{ ('status.' + scan.status.toLowerCase()) | transloco }}</span>
             </div>
 
             <div class="history-metadata">
-              <p><strong>Project URL:</strong> {{ scan.projectUrl }}</p>
-              <p><strong>Started:</strong> {{ scan.startedAt ? (scan.startedAt | date: 'medium') : 'N/A' }}</p>
-              <p><strong>Finished:</strong> {{ scan.finishedAt ? (scan.finishedAt | date: 'medium') : 'In progress' }}</p>
+              <p><strong>{{ 'scanHistory.list.projectUrl' | transloco }}:</strong> {{ scan.projectUrl }}</p>
+              <p><strong>{{ 'scanHistory.list.started' | transloco }}:</strong> {{ scan.startedAt ? (scan.startedAt | date: 'medium') : ('common.na' | transloco) }}</p>
+              <p><strong>{{ 'scanHistory.list.finished' | transloco }}:</strong> {{ scan.finishedAt ? (scan.finishedAt | date: 'medium') : ('common.inProgress' | transloco) }}</p>
             </div>
 
             <div class="history-actions">
               @if (scan.projectId) {
-                <a class="btn btn-ghost" [routerLink]="['/projects', scan.projectId]">Open project</a>
+                <a class="btn btn-ghost" [routerLink]="['/projects', scan.projectId]">{{ 'scanHistory.actions.openProject' | transloco }}</a>
               }
               @if (scan.scanId) {
-                <a class="btn btn-secondary" [routerLink]="['/scans', scan.scanId]">Open scan</a>
+                <a class="btn btn-secondary" [routerLink]="['/scans', scan.scanId]">{{ 'scanHistory.actions.openScan' | transloco }}</a>
               }
             </div>
           </article>

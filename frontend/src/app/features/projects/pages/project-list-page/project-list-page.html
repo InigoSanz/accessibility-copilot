@@ -1,44 +1,41 @@
 <section class="projects-page page-shell">
   <header class="page-hero" aria-labelledby="projects-title">
-    <span class="page-hero__eyebrow">Workspace</span>
-    <h1 id="projects-title">Accessibility project hub</h1>
-    <p>
-      Create projects, run scans and keep your accessibility reviews organized in one polished
-      workspace.
-    </p>
+    <span class="page-hero__eyebrow">{{ 'projectList.hero.eyebrow' | transloco }}</span>
+    <h1 id="projects-title">{{ 'projectList.hero.title' | transloco }}</h1>
+    <p>{{ 'projectList.hero.description' | transloco }}</p>
   </header>
 
   <section class="projects-grid">
     <article class="surface-card create-panel" aria-labelledby="create-project-title">
       <div class="section-head">
-        <h2 id="create-project-title">Create new project</h2>
-        <p>Set the name and root URL to start scanning.</p>
+        <h2 id="create-project-title">{{ 'projectList.create.title' | transloco }}</h2>
+        <p>{{ 'projectList.create.description' | transloco }}</p>
       </div>
 
       <form class="form-grid" [formGroup]="createProjectForm" (ngSubmit)="submit()" novalidate>
         <div class="form-field">
-          <label for="project-name">Project name</label>
+          <label for="project-name">{{ 'projectList.form.nameLabel' | transloco }}</label>
           <input
             id="project-name"
             type="text"
             formControlName="name"
-            placeholder="Corporate website"
+            [placeholder]="'projectList.form.namePlaceholder' | transloco"
           />
           @if (nameControl.touched && nameControl.invalid) {
-            <p class="field-error">Please add a project name.</p>
+            <p class="field-error">{{ 'projectList.form.nameRequired' | transloco }}</p>
           }
         </div>
 
         <div class="form-field">
-          <label for="project-root-url">Root URL</label>
+          <label for="project-root-url">{{ 'projectList.form.rootUrlLabel' | transloco }}</label>
           <input
             id="project-root-url"
             type="text"
             formControlName="rootUrl"
-            placeholder="https://example.com"
+            [placeholder]="'projectList.form.rootUrlPlaceholder' | transloco"
           />
           @if (rootUrlControl.touched && rootUrlControl.invalid) {
-            <p class="field-error">Please add the root URL.</p>
+            <p class="field-error">{{ 'projectList.form.rootUrlRequired' | transloco }}</p>
           }
         </div>
 
@@ -48,40 +45,40 @@
 
         <button class="btn btn-primary" type="submit" [disabled]="submitting">
           @if (submitting) {
-            Creating project...
+            {{ 'projectList.create.submitting' | transloco }}
           } @else {
-            Create project
+            {{ 'projectList.create.button' | transloco }}
           }
         </button>
       </form>
     </article>
 
-    <section class="projects-list-section" aria-label="Projects list">
+    <section class="projects-list-section" [attr.aria-label]="'projectList.list.aria' | transloco">
       <div class="section-head">
-        <h2>Project portfolio</h2>
-        <p>{{ projects.length }} project(s)</p>
+        <h2>{{ 'projectList.list.title' | transloco }}</h2>
+        <p>{{ 'projectList.list.count' | transloco: { count: projects.length } }}</p>
       </div>
 
       @if (loading) {
-        <p class="status-message">Loading projects...</p>
+        <p class="status-message">{{ 'projectList.messages.loading' | transloco }}</p>
       } @else if (error) {
         <p class="status-message status-message--error">{{ error }}</p>
       } @else if (projects.length === 0) {
-        <p class="status-message">No projects yet. Create your first project to begin.</p>
+        <p class="status-message">{{ 'projectList.messages.empty' | transloco }}</p>
       } @else {
-        <div class="project-list" role="list" aria-label="Project list">
+        <div class="project-list" role="list" [attr.aria-label]="'projectList.list.aria' | transloco">
           @for (project of projects; track project.id) {
             <article class="surface-card project-card" role="listitem">
               <div class="project-card__head">
                 <h3>{{ project.name }}</h3>
-                <span class="project-chip">Active</span>
+                <span class="project-chip">{{ 'projectList.list.active' | transloco }}</span>
               </div>
 
               <p class="project-url">{{ project.rootUrl }}</p>
-              <p class="project-meta">Created {{ project.createdAt | date: 'medium' }}</p>
+              <p class="project-meta">{{ 'projectList.list.created' | transloco }} {{ project.createdAt | date: 'medium' }}</p>
 
               <a class="btn btn-secondary project-open-link" [routerLink]="['/projects', project.id]">
-                Open project
+                {{ 'projectList.list.openProject' | transloco }}
               </a>
             </article>
           }

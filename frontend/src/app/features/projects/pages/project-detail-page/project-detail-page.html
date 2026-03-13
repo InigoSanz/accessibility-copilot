@@ -1,38 +1,38 @@
 <section class="project-detail-page page-shell">
-  <a class="back-link" routerLink="/projects">← Back to project list</a>
+  <a class="back-link" routerLink="/projects">← {{ 'projectDetail.back' | transloco }}</a>
 
   <header class="page-hero" aria-labelledby="project-overview-title">
-    <span class="page-hero__eyebrow">Project detail</span>
-    <h1 id="project-overview-title">Project operations</h1>
-    <p>Run new accessibility scans and track their lifecycle from one place.</p>
+    <span class="page-hero__eyebrow">{{ 'projectDetail.hero.eyebrow' | transloco }}</span>
+    <h1 id="project-overview-title">{{ 'projectDetail.hero.title' | transloco }}</h1>
+    <p>{{ 'projectDetail.hero.description' | transloco }}</p>
   </header>
 
   <div class="detail-grid">
     <section class="detail-column" aria-labelledby="project-summary-title">
       <div class="section-head">
-        <h2 id="project-summary-title">Project summary</h2>
+        <h2 id="project-summary-title">{{ 'projectDetail.summary.title' | transloco }}</h2>
       </div>
 
       @if (loadingProject) {
-        <p class="status-message">Loading project details...</p>
+        <p class="status-message">{{ 'projectDetail.messages.loadingProject' | transloco }}</p>
       } @else if (projectError) {
         <p class="status-message status-message--error">{{ projectError }}</p>
       } @else if (project) {
         <article class="surface-card detail-card">
           <h3>{{ project.name }}</h3>
           <p class="detail-url">{{ project.rootUrl }}</p>
-          <p class="detail-meta">Created {{ project.createdAt | date: 'medium' }}</p>
+          <p class="detail-meta">{{ 'projectDetail.summary.created' | transloco }} {{ project.createdAt | date: 'medium' }}</p>
         </article>
       }
     </section>
 
     <section class="detail-column" aria-labelledby="project-actions-title">
       <div class="section-head">
-        <h2 id="project-actions-title">Scan actions</h2>
+        <h2 id="project-actions-title">{{ 'projectDetail.actions.title' | transloco }}</h2>
       </div>
 
       <article class="surface-card actions-card">
-        <p>Launch a new scan for this project and monitor progress in real time.</p>
+        <p>{{ 'projectDetail.actions.description' | transloco }}</p>
 
         <button
           type="button"
@@ -41,9 +41,9 @@
           [disabled]="runningScan || !project"
         >
           @if (runningScan) {
-            Starting scan...
+            {{ 'projectDetail.actions.starting' | transloco }}
           } @else {
-            Run scan now
+            {{ 'projectDetail.actions.runNow' | transloco }}
           }
         </button>
 
@@ -60,32 +60,32 @@
 
   <section class="detail-section" aria-labelledby="project-scans-title">
     <div class="section-head">
-      <h2 id="project-scans-title">Scans</h2>
-      <p>{{ scans.length }} scan(s)</p>
+      <h2 id="project-scans-title">{{ 'projectDetail.scans.title' | transloco }}</h2>
+      <p>{{ 'projectDetail.scans.count' | transloco: { count: scans.length } }}</p>
     </div>
 
     @if (loadingScans) {
-      <p class="status-message">Loading scans...</p>
+      <p class="status-message">{{ 'projectDetail.messages.loadingScans' | transloco }}</p>
     } @else if (scansError) {
       <p class="status-message status-message--error">{{ scansError }}</p>
     } @else if (scans.length === 0) {
-      <p class="status-message">No scans found for this project yet.</p>
+      <p class="status-message">{{ 'projectDetail.messages.emptyScans' | transloco }}</p>
     } @else {
-      <div class="scan-list" role="list" aria-label="Project scans">
+      <div class="scan-list" role="list" [attr.aria-label]="'projectDetail.scans.aria' | transloco">
         @for (scan of scans; track scan.id) {
           <article class="surface-card scan-card" role="listitem">
             <div class="scan-card__header">
-              <p class="scan-id">Scan #{{ scan.id ?? 'N/A' }}</p>
-              <span [class]="statusClass(scan.status)">{{ scan.status || 'N/A' }}</span>
+              <p class="scan-id">{{ 'projectDetail.scans.scanNumber' | transloco }} #{{ scan.id ?? ('common.na' | transloco) }}</p>
+              <span [class]="statusClass(scan.status)">{{ ('status.' + (scan.status?.toLowerCase() ?? 'unknown')) | transloco }}</span>
             </div>
 
             <div class="scan-timeline">
-              <p><strong>Started:</strong> {{ scan.startedAt | date: 'medium' }}</p>
-              <p><strong>Finished:</strong> {{ scan.finishedAt ? (scan.finishedAt | date: 'medium') : 'In progress' }}</p>
+              <p><strong>{{ 'projectDetail.scans.started' | transloco }}:</strong> {{ scan.startedAt | date: 'medium' }}</p>
+              <p><strong>{{ 'projectDetail.scans.finished' | transloco }}:</strong> {{ scan.finishedAt ? (scan.finishedAt | date: 'medium') : ('common.inProgress' | transloco) }}</p>
             </div>
 
             @if (scan.id) {
-              <a class="btn btn-secondary" [routerLink]="['/scans', scan.id]">Open scan detail</a>
+              <a class="btn btn-secondary" [routerLink]="['/scans', scan.id]">{{ 'projectDetail.scans.openScan' | transloco }}</a>
             }
           </article>
         }

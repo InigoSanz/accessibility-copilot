@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { ProjectResponse } from '../../../../api-client/model/projectResponse';
 import { ScanResponse } from '../../../../api-client/model/scanResponse';
@@ -8,7 +9,7 @@ import { ProjectService } from '../../../../core/services/project.service';
 
 @Component({
   selector: 'app-project-detail-page',
-  imports: [CommonModule, DatePipe, RouterLink],
+  imports: [CommonModule, DatePipe, RouterLink, TranslocoPipe],
   templateUrl: './project-detail-page.html',
   styleUrl: './project-detail-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,6 +19,7 @@ export class ProjectDetailPage implements OnInit {
   private readonly router = inject(Router);
   private readonly projectService = inject(ProjectService);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly translocoService = inject(TranslocoService);
 
   loadingProject = true;
   loadingScans = true;
@@ -34,8 +36,8 @@ export class ProjectDetailPage implements OnInit {
     const projectId = Number(idParam);
 
     if (!idParam || !Number.isInteger(projectId) || projectId <= 0) {
-      this.projectError = 'Invalid project id.';
-      this.scansError = 'Could not load scans because project id is invalid.';
+      this.projectError = this.translocoService.translate('projectDetail.messages.invalidProjectId');
+      this.scansError = this.translocoService.translate('projectDetail.messages.invalidScansProjectId');
       this.loadingProject = false;
       this.loadingScans = false;
       this.changeDetectorRef.markForCheck();
@@ -57,7 +59,7 @@ export class ProjectDetailPage implements OnInit {
         this.changeDetectorRef.markForCheck();
       },
       error: () => {
-        this.projectError = 'Could not load project details. Please try again.';
+        this.projectError = this.translocoService.translate('projectDetail.messages.loadProjectError');
         this.loadingProject = false;
         this.changeDetectorRef.markForCheck();
       },
@@ -75,7 +77,7 @@ export class ProjectDetailPage implements OnInit {
         this.changeDetectorRef.markForCheck();
       },
       error: () => {
-        this.scansError = 'Could not load scans. Please try again.';
+        this.scansError = this.translocoService.translate('projectDetail.messages.loadScansError');
         this.loadingScans = false;
         this.changeDetectorRef.markForCheck();
       },
@@ -97,7 +99,7 @@ export class ProjectDetailPage implements OnInit {
     this.projectService.runScan(projectId).subscribe({
       next: (scan) => {
         this.runningScan = false;
-        this.runScanSuccess = 'Scan started. Waiting for backend processing...';
+        this.runScanSuccess = this.translocoService.translate('projectDetail.messages.runScanSuccess');
         this.changeDetectorRef.markForCheck();
         this.loadScans(projectId);
 
@@ -107,7 +109,7 @@ export class ProjectDetailPage implements OnInit {
       },
       error: () => {
         this.runningScan = false;
-        this.runScanError = 'Could not run scan. Please try again.';
+        this.runScanError = this.translocoService.translate('projectDetail.messages.runScanError');
         this.changeDetectorRef.markForCheck();
       },
     });

@@ -1,0 +1,223 @@
+{
+  "common": {
+    "na": "N/A",
+    "inProgress": "In progress"
+  },
+  "status": {
+    "running": "RUNNING",
+    "completed": "COMPLETED",
+    "failed": "FAILED",
+    "unknown": "UNKNOWN"
+  },
+  "severity": {
+    "critical": "CRITICAL",
+    "serious": "SERIOUS",
+    "moderate": "MODERATE",
+    "minor": "MINOR",
+    "high": "HIGH",
+    "medium": "MEDIUM",
+    "low": "LOW",
+    "unknown": "UNKNOWN"
+  },
+  "app": {
+    "meta": {
+      "title": "Accessibility Copilot | Scanning workspace"
+    },
+    "brand": {
+      "name": "Accessibility Copilot",
+      "tagline": "Accessibility scanning workspace"
+    },
+    "navigation": {
+      "homeAria": "Accessibility Copilot home",
+      "mainAria": "Main navigation",
+      "projects": "Projects",
+      "scans": "Scans"
+    },
+    "language": {
+      "label": "Language",
+      "options": {
+        "es": "ES",
+        "en": "EN"
+      }
+    },
+    "footer": {
+      "aria": "Footer",
+      "brand": "Accessibility Copilot",
+      "navigationAria": "Footer navigation"
+    }
+  },
+  "projectList": {
+    "hero": {
+      "eyebrow": "Workspace",
+      "title": "Accessibility project hub",
+      "description": "Create projects, run scans, and keep your accessibility reviews organized in one polished workspace."
+    },
+    "create": {
+      "title": "Create new project",
+      "description": "Set the name and root URL to start scanning.",
+      "button": "Create project",
+      "submitting": "Creating project..."
+    },
+    "form": {
+      "nameLabel": "Project name",
+      "namePlaceholder": "Corporate website",
+      "nameRequired": "Please add a project name.",
+      "rootUrlLabel": "Root URL",
+      "rootUrlPlaceholder": "https://example.com",
+      "rootUrlRequired": "Please add the root URL."
+    },
+    "list": {
+      "aria": "Projects list",
+      "title": "Project portfolio",
+      "count": "{{ count }} project(s)",
+      "active": "Active",
+      "created": "Created",
+      "openProject": "Open project"
+    },
+    "messages": {
+      "loading": "Loading projects...",
+      "empty": "No projects yet. Create your first project to begin.",
+      "loadError": "Could not load projects. Please try again.",
+      "createError": "Could not create project. Please try again."
+    }
+  },
+  "projectDetail": {
+    "back": "Back to project list",
+    "hero": {
+      "eyebrow": "Project detail",
+      "title": "Project operations",
+      "description": "Run new accessibility scans and track their lifecycle from one place."
+    },
+    "summary": {
+      "title": "Project summary",
+      "created": "Created"
+    },
+    "actions": {
+      "title": "Scan actions",
+      "description": "Launch a new scan for this project and monitor progress in real time.",
+      "starting": "Starting scan...",
+      "runNow": "Run scan now"
+    },
+    "scans": {
+      "title": "Scans",
+      "count": "{{ count }} scan(s)",
+      "aria": "Project scans",
+      "scanNumber": "Scan",
+      "started": "Started",
+      "finished": "Finished",
+      "openScan": "Open scan detail"
+    },
+    "messages": {
+      "invalidProjectId": "Invalid project id.",
+      "invalidScansProjectId": "Could not load scans because project id is invalid.",
+      "loadProjectError": "Could not load project details. Please try again.",
+      "loadScansError": "Could not load scans. Please try again.",
+      "runScanSuccess": "Scan started. Waiting for backend processing...",
+      "runScanError": "Could not run scan. Please try again.",
+      "loadingProject": "Loading project details...",
+      "loadingScans": "Loading scans...",
+      "emptyScans": "No scans found for this project yet."
+    }
+  },
+  "scanDetail": {
+    "backToProject": "Back to project",
+    "hero": {
+      "eyebrow": "Scan detail",
+      "title": "Scan lifecycle and findings",
+      "description": "Track scan status, monitor summary metrics, and inspect accessibility issues in detail."
+    },
+    "overview": {
+      "title": "Scan overview",
+      "scanId": "Scan ID",
+      "projectId": "Project ID",
+      "startedAt": "Started at",
+      "finishedAt": "Finished at",
+      "duration": "Duration"
+    },
+    "duration": {
+      "secondsOnly": "{{ seconds }}s",
+      "minutesAndSeconds": "{{ minutes }}m {{ seconds }}s"
+    },
+    "failed": {
+      "title": "Scan failed",
+      "description": "This scan ended in FAILED state. Review backend logs for execution details."
+    },
+    "summary": {
+      "title": "Summary",
+      "totalCount": "{{ count }} total issue(s)",
+      "totalIssues": "Total issues",
+      "severityAria": "Issues by severity",
+      "running": "Summary is still being generated while the scan is running.",
+      "unavailable": "Summary is not available for this scan."
+    },
+    "issues": {
+      "title": "Issues",
+      "count": "{{ count }} item(s)",
+      "aria": "Scan issues",
+      "running": "Scan is still running. Issues will appear as soon as they are available.",
+      "empty": "No issues were found for this scan.",
+      "unknownRule": "Unknown rule",
+      "noMessage": "No message provided.",
+      "wcag": "WCAG",
+      "selector": "Selector"
+    },
+    "messages": {
+      "loading": "Loading scan, summary and issues...",
+      "polling": "Auto-refreshing this scan while backend status is RUNNING.",
+      "invalidScanId": "Invalid scan id.",
+      "loadError": "Could not load scan details. Please try again."
+    }
+  },
+  "scanHistory": {
+    "hero": {
+      "eyebrow": "Scan history",
+      "title": "All scans across projects",
+      "description": "Track scan activity in one unified timeline and quickly open project or scan details."
+    },
+    "filters": {
+      "aria": "Scan filters",
+      "status": "Status",
+      "project": "Project",
+      "allStatuses": "All statuses",
+      "allProjects": "All projects",
+      "refresh": "Refresh data",
+      "clear": "Clear filters"
+    },
+    "list": {
+      "title": "Recent scans",
+      "count": "{{ filtered }} of {{ total }} scan(s)",
+      "updated": "Updated",
+      "aria": "Scan history list",
+      "scanNumber": "Scan",
+      "projectUrl": "Project URL",
+      "started": "Started",
+      "finished": "Finished",
+      "unnamedProject": "Unnamed project"
+    },
+    "actions": {
+      "openProject": "Open project",
+      "openScan": "Open scan"
+    },
+    "messages": {
+      "loading": "Loading scan history...",
+      "empty": "No scans yet. Run your first scan from a project page.",
+      "noMatches": "No scans match the selected filters.",
+      "loadError": "Could not load scan history. Please try again."
+    }
+  },
+  "notFound": {
+    "hero": {
+      "eyebrow": "Navigation",
+      "title": "Page not found",
+      "description": "The page you requested does not exist or has been moved."
+    },
+    "content": {
+      "title": "Let's get you back on track",
+      "description": "Use one of these shortcuts to return to a valid workspace page."
+    },
+    "actions": {
+      "projects": "Go to projects",
+      "scans": "Go to scans"
+    }
+  }
+}

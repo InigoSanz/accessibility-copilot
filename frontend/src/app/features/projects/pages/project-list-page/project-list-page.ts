@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit }
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { CreateProjectRequest } from '../../../../api-client/model/createProjectRequest';
 import { ProjectResponse } from '../../../../api-client/model/projectResponse';
@@ -9,7 +10,7 @@ import { ProjectService } from '../../../../core/services/project.service';
 
 @Component({
   selector: 'app-project-list-page',
-  imports: [CommonModule, DatePipe, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, DatePipe, ReactiveFormsModule, RouterLink, TranslocoPipe],
   templateUrl: './project-list-page.html',
   styleUrl: './project-list-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,6 +19,7 @@ export class ProjectListPage implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly projectService = inject(ProjectService);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly translocoService = inject(TranslocoService);
 
   readonly createProjectForm = this.formBuilder.nonNullable.group({
     name: ['', Validators.required],
@@ -65,7 +67,7 @@ export class ProjectListPage implements OnInit {
         this.loadProjects();
       },
       error: () => {
-        this.submitError = 'Could not create project. Please try again.';
+        this.submitError = this.translocoService.translate('projectList.messages.createError');
         this.submitting = false;
         this.changeDetectorRef.markForCheck();
       },
@@ -83,7 +85,7 @@ export class ProjectListPage implements OnInit {
         this.changeDetectorRef.markForCheck();
       },
       error: () => {
-        this.error = 'Could not load projects. Please try again.';
+        this.error = this.translocoService.translate('projectList.messages.loadError');
         this.loading = false;
         this.changeDetectorRef.markForCheck();
       },

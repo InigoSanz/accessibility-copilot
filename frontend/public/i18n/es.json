@@ -1,0 +1,223 @@
+{
+  "common": {
+    "na": "N/D",
+    "inProgress": "En progreso"
+  },
+  "status": {
+    "running": "RUNNING",
+    "completed": "COMPLETED",
+    "failed": "FAILED",
+    "unknown": "DESCONOCIDO"
+  },
+  "severity": {
+    "critical": "CRÍTICA",
+    "serious": "SERIA",
+    "moderate": "MODERADA",
+    "minor": "MENOR",
+    "high": "ALTA",
+    "medium": "MEDIA",
+    "low": "BAJA",
+    "unknown": "DESCONOCIDA"
+  },
+  "app": {
+    "meta": {
+      "title": "Accessibility Copilot | Espacio de escaneo"
+    },
+    "brand": {
+      "name": "Accessibility Copilot",
+      "tagline": "Espacio de trabajo para escaneo de accesibilidad"
+    },
+    "navigation": {
+      "homeAria": "Inicio de Accessibility Copilot",
+      "mainAria": "Navegación principal",
+      "projects": "Proyectos",
+      "scans": "Scans"
+    },
+    "language": {
+      "label": "Idioma",
+      "options": {
+        "es": "ES",
+        "en": "EN"
+      }
+    },
+    "footer": {
+      "aria": "Pie de página",
+      "brand": "Accessibility Copilot",
+      "navigationAria": "Navegación del pie"
+    }
+  },
+  "projectList": {
+    "hero": {
+      "eyebrow": "Workspace",
+      "title": "Centro de proyectos de accesibilidad",
+      "description": "Crea proyectos, ejecuta scans y mantén tus revisiones de accesibilidad organizadas en un solo espacio."
+    },
+    "create": {
+      "title": "Crear nuevo proyecto",
+      "description": "Define el nombre y la URL raíz para empezar a escanear.",
+      "button": "Crear proyecto",
+      "submitting": "Creando proyecto..."
+    },
+    "form": {
+      "nameLabel": "Nombre del proyecto",
+      "namePlaceholder": "Sitio web corporativo",
+      "nameRequired": "Agrega un nombre de proyecto.",
+      "rootUrlLabel": "URL raíz",
+      "rootUrlPlaceholder": "https://example.com",
+      "rootUrlRequired": "Agrega la URL raíz."
+    },
+    "list": {
+      "aria": "Lista de proyectos",
+      "title": "Portafolio de proyectos",
+      "count": "{{ count }} proyecto(s)",
+      "active": "Activo",
+      "created": "Creado",
+      "openProject": "Abrir proyecto"
+    },
+    "messages": {
+      "loading": "Cargando proyectos...",
+      "empty": "Aún no hay proyectos. Crea tu primer proyecto para comenzar.",
+      "loadError": "No se pudieron cargar los proyectos. Inténtalo de nuevo.",
+      "createError": "No se pudo crear el proyecto. Inténtalo de nuevo."
+    }
+  },
+  "projectDetail": {
+    "back": "Volver a la lista de proyectos",
+    "hero": {
+      "eyebrow": "Detalle de proyecto",
+      "title": "Operaciones del proyecto",
+      "description": "Ejecuta nuevos scans de accesibilidad y sigue su ciclo de vida desde un solo lugar."
+    },
+    "summary": {
+      "title": "Resumen del proyecto",
+      "created": "Creado"
+    },
+    "actions": {
+      "title": "Acciones de scan",
+      "description": "Lanza un nuevo scan para este proyecto y monitoriza su progreso en tiempo real.",
+      "starting": "Iniciando scan...",
+      "runNow": "Ejecutar scan ahora"
+    },
+    "scans": {
+      "title": "Scans",
+      "count": "{{ count }} scan(s)",
+      "aria": "Scans del proyecto",
+      "scanNumber": "Scan",
+      "started": "Inicio",
+      "finished": "Fin",
+      "openScan": "Abrir detalle de scan"
+    },
+    "messages": {
+      "invalidProjectId": "ID de proyecto inválido.",
+      "invalidScansProjectId": "No se pudieron cargar los scans porque el ID del proyecto es inválido.",
+      "loadProjectError": "No se pudieron cargar los detalles del proyecto. Inténtalo de nuevo.",
+      "loadScansError": "No se pudieron cargar los scans. Inténtalo de nuevo.",
+      "runScanSuccess": "Scan iniciado. Esperando procesamiento del backend...",
+      "runScanError": "No se pudo ejecutar el scan. Inténtalo de nuevo.",
+      "loadingProject": "Cargando detalles del proyecto...",
+      "loadingScans": "Cargando scans...",
+      "emptyScans": "Aún no hay scans para este proyecto."
+    }
+  },
+  "scanDetail": {
+    "backToProject": "Volver al proyecto",
+    "hero": {
+      "eyebrow": "Detalle de scan",
+      "title": "Ciclo de vida y hallazgos del scan",
+      "description": "Sigue el estado del scan, monitoriza el resumen y revisa incidencias de accesibilidad en detalle."
+    },
+    "overview": {
+      "title": "Resumen del scan",
+      "scanId": "ID de scan",
+      "projectId": "ID de proyecto",
+      "startedAt": "Iniciado",
+      "finishedAt": "Finalizado",
+      "duration": "Duración"
+    },
+    "duration": {
+      "secondsOnly": "{{ seconds }}s",
+      "minutesAndSeconds": "{{ minutes }}m {{ seconds }}s"
+    },
+    "failed": {
+      "title": "Scan fallido",
+      "description": "Este scan terminó en estado FAILED. Revisa los logs del backend para más detalle."
+    },
+    "summary": {
+      "title": "Resumen",
+      "totalCount": "{{ count }} incidencia(s) total(es)",
+      "totalIssues": "Incidencias totales",
+      "severityAria": "Incidencias por severidad",
+      "running": "El resumen aún se está generando mientras el scan está en ejecución.",
+      "unavailable": "No hay resumen disponible para este scan."
+    },
+    "issues": {
+      "title": "Incidencias",
+      "count": "{{ count }} elemento(s)",
+      "aria": "Incidencias del scan",
+      "running": "El scan sigue en ejecución. Las incidencias aparecerán cuando estén disponibles.",
+      "empty": "No se encontraron incidencias para este scan.",
+      "unknownRule": "Regla desconocida",
+      "noMessage": "No se proporcionó mensaje.",
+      "wcag": "WCAG",
+      "selector": "Selector"
+    },
+    "messages": {
+      "loading": "Cargando scan, resumen e incidencias...",
+      "polling": "Autoactualizando este scan mientras el estado backend está en RUNNING.",
+      "invalidScanId": "ID de scan inválido.",
+      "loadError": "No se pudieron cargar los detalles del scan. Inténtalo de nuevo."
+    }
+  },
+  "scanHistory": {
+    "hero": {
+      "eyebrow": "Historial de scans",
+      "title": "Todos los scans entre proyectos",
+      "description": "Sigue la actividad de scans en una línea temporal unificada y abre rápidamente detalles de proyecto o scan."
+    },
+    "filters": {
+      "aria": "Filtros de scans",
+      "status": "Estado",
+      "project": "Proyecto",
+      "allStatuses": "Todos los estados",
+      "allProjects": "Todos los proyectos",
+      "refresh": "Actualizar datos",
+      "clear": "Limpiar filtros"
+    },
+    "list": {
+      "title": "Scans recientes",
+      "count": "{{ filtered }} de {{ total }} scan(s)",
+      "updated": "Actualizado",
+      "aria": "Lista de historial de scans",
+      "scanNumber": "Scan",
+      "projectUrl": "URL del proyecto",
+      "started": "Inicio",
+      "finished": "Fin",
+      "unnamedProject": "Proyecto sin nombre"
+    },
+    "actions": {
+      "openProject": "Abrir proyecto",
+      "openScan": "Abrir scan"
+    },
+    "messages": {
+      "loading": "Cargando historial de scans...",
+      "empty": "Aún no hay scans. Ejecuta el primero desde una página de proyecto.",
+      "noMatches": "Ningún scan coincide con los filtros seleccionados.",
+      "loadError": "No se pudo cargar el historial de scans. Inténtalo de nuevo."
+    }
+  },
+  "notFound": {
+    "hero": {
+      "eyebrow": "Navegación",
+      "title": "Página no encontrada",
+      "description": "La página solicitada no existe o fue movida."
+    },
+    "content": {
+      "title": "Volvamos al camino correcto",
+      "description": "Usa uno de estos accesos para volver a una página válida del workspace."
+    },
+    "actions": {
+      "projects": "Ir a proyectos",
+      "scans": "Ir a scans"
+    }
+  }
+}
