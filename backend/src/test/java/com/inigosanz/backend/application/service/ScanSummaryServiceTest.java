@@ -38,7 +38,7 @@ class ScanSummaryServiceTest {
     @Test
     void shouldReturnSummaryWithTotalIssuesAndGroupedBySeverity() {
         Long scanId = 1L;
-        Scan scan = new Scan(scanId, 1L, ScanStatus.COMPLETED, LocalDateTime.now(), LocalDateTime.now());
+        Scan scan = new Scan(scanId, 1L, ScanStatus.COMPLETED, LocalDateTime.now(), LocalDateTime.now(), null);
 
         List<AccessibilityIssue> issues = List.of(
                 new AccessibilityIssue(

@@ -7,7 +7,8 @@ public record ScanResponse(
         Long projectId,
         String status,
         LocalDateTime startedAt,
-        LocalDateTime finishedAt
+        LocalDateTime finishedAt,
+        String errorMessage
 ) {
 }
 

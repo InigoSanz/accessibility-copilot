@@ -38,7 +38,7 @@ class AccessibilityIssueServiceTest {
     @Test
     void shouldReturnIssuesWhenScanExists() {
         Long scanId = 1L;
-        Scan scan = new Scan(scanId, 1L, ScanStatus.COMPLETED, LocalDateTime.now(), LocalDateTime.now());
+        Scan scan = new Scan(scanId, 1L, ScanStatus.COMPLETED, LocalDateTime.now(), LocalDateTime.now(), null);
         AccessibilityIssue issue = new AccessibilityIssue(
                 1L,
                 scanId,

@@ -36,8 +36,8 @@ class ScanPersistenceAdapterTest {
         ScanEntity firstEntity = new ScanEntity();
         ScanEntity secondEntity = new ScanEntity();
 
-        Scan firstScan = new Scan(2L, projectId, ScanStatus.COMPLETED, LocalDateTime.now(), LocalDateTime.now());
-        Scan secondScan = new Scan(1L, projectId, ScanStatus.RUNNING, LocalDateTime.now().minusMinutes(1), null);
+        Scan firstScan = new Scan(2L, projectId, ScanStatus.COMPLETED, LocalDateTime.now(), LocalDateTime.now(), null);
+        Scan secondScan = new Scan(1L, projectId, ScanStatus.RUNNING, LocalDateTime.now().minusMinutes(1), null, null);
 
         when(jpaScanRepository.findByProjectIdOrderByStartedAtDescIdDesc(projectId))
                 .thenReturn(List.of(firstEntity, secondEntity));

@@ -14,7 +14,7 @@ class ScanTest {
     void shouldAllowNullFinishedAt() {
         LocalDateTime startedAt = LocalDateTime.of(2026, 3, 13, 11, 0, 0);
 
-        Scan scan = new Scan(1L, 10L, ScanStatus.RUNNING, startedAt, null);
+        Scan scan = new Scan(1L, 10L, ScanStatus.RUNNING, startedAt, null, null);
 
         assertEquals(1L, scan.getId());
         assertEquals(10L, scan.getProjectId());
@@ -27,7 +27,7 @@ class ScanTest {
     void shouldRequireStartedAt() {
         NullPointerException exception = assertThrows(
                 NullPointerException.class,
-                () -> new Scan(1L, 10L, ScanStatus.PENDING, null, null)
+                () -> new Scan(1L, 10L, ScanStatus.PENDING, null, null, null)
         );
 
         assertEquals("startedAt is required", exception.getMessage());

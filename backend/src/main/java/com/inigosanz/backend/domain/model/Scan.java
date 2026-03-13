@@ -10,13 +10,22 @@ public class Scan {
     private final ScanStatus status;
     private final LocalDateTime startedAt;
     private final LocalDateTime finishedAt;
+    private final String errorMessage;
 
-    public Scan(Long id, Long projectId, ScanStatus status, LocalDateTime startedAt, LocalDateTime finishedAt) {
+    public Scan(
+            Long id,
+            Long projectId,
+            ScanStatus status,
+            LocalDateTime startedAt,
+            LocalDateTime finishedAt,
+            String errorMessage
+    ) {
         this.id = id;
         this.projectId = Objects.requireNonNull(projectId, "projectId is required");
         this.status = Objects.requireNonNull(status, "status is required");
         this.startedAt = Objects.requireNonNull(startedAt, "startedAt is required");
         this.finishedAt = finishedAt;
+        this.errorMessage = errorMessage;
     }
 
     public Long getId() {
@@ -37,6 +46,10 @@ public class Scan {
 
     public LocalDateTime getFinishedAt() {
         return finishedAt;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
     }
 }
 

@@ -33,6 +33,9 @@ public class ScanEntity {
     @Column(name = "finished_at")
     private LocalDateTime finishedAt;
 
+    @Column(name = "error_message", columnDefinition = "TEXT")
+    private String errorMessage;
+
     public ScanEntity() {
     }
 
@@ -74,6 +77,14 @@ public class ScanEntity {
 
     public void setFinishedAt(LocalDateTime finishedAt) {
         this.finishedAt = finishedAt;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }
 

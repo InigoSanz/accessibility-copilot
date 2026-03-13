@@ -22,10 +22,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -55,10 +55,9 @@ class ScanControllerWebMvcTest {
     @Test
     void create_whenProjectExists_shouldReturnCreatedScan() throws Exception {
         LocalDateTime startedAt = LocalDateTime.of(2026, 3, 10, 14, 0, 0);
-        LocalDateTime finishedAt = LocalDateTime.of(2026, 3, 10, 14, 0, 1);
 
-        Scan scan = new Scan(1L, 1L, ScanStatus.COMPLETED, startedAt, finishedAt);
-        ScanResponse response = new ScanResponse(1L, 1L, "COMPLETED", startedAt, finishedAt);
+        Scan scan = new Scan(1L, 1L, ScanStatus.RUNNING, startedAt, null, null);
+        ScanResponse response = new ScanResponse(1L, 1L, "RUNNING", startedAt, null, null);
 
         when(createScanUseCase.create(1L)).thenReturn(scan);
         when(scanWebMapper.toResponse(scan)).thenReturn(response);
@@ -68,9 +67,10 @@ class ScanControllerWebMvcTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.projectId").value(1))
-                .andExpect(jsonPath("$.status").value("COMPLETED"))
+                .andExpect(jsonPath("$.status").value("RUNNING"))
                 .andExpect(jsonPath("$.startedAt").value("2026-03-10T14:00:00"))
-                .andExpect(jsonPath("$.finishedAt").value("2026-03-10T14:00:01"));
+                .andExpect(jsonPath("$.finishedAt").value(nullValue()))
+                .andExpect(jsonPath("$.errorMessage").value(nullValue()));
 
         verify(createScanUseCase).create(1L);
         verify(scanWebMapper).toResponse(scan);
@@ -93,8 +93,8 @@ class ScanControllerWebMvcTest {
         LocalDateTime startedAt = LocalDateTime.of(2026, 3, 10, 12, 0, 0);
         LocalDateTime finishedAt = LocalDateTime.of(2026, 3, 10, 12, 0, 1);
 
-        Scan scan = new Scan(1L, 1L, ScanStatus.COMPLETED, startedAt, finishedAt);
-        ScanResponse response = new ScanResponse(1L, 1L, "COMPLETED", startedAt, finishedAt);
+        Scan scan = new Scan(1L, 1L, ScanStatus.COMPLETED, startedAt, finishedAt, null);
+        ScanResponse response = new ScanResponse(1L, 1L, "COMPLETED", startedAt, finishedAt, null);
 
         when(listScansByProjectUseCase.findByProjectId(1L)).thenReturn(List.of(scan));
         when(scanWebMapper.toResponseList(List.of(scan))).thenReturn(List.of(response));
@@ -117,8 +117,8 @@ class ScanControllerWebMvcTest {
         LocalDateTime startedAt = LocalDateTime.of(2026, 3, 10, 12, 0, 0);
         LocalDateTime finishedAt = LocalDateTime.of(2026, 3, 10, 12, 0, 1);
 
-        Scan scan = new Scan(1L, 1L, ScanStatus.COMPLETED, startedAt, finishedAt);
-        ScanResponse response = new ScanResponse(1L, 1L, "COMPLETED", startedAt, finishedAt);
+        Scan scan = new Scan(1L, 1L, ScanStatus.COMPLETED, startedAt, finishedAt, null);
+        ScanResponse response = new ScanResponse(1L, 1L, "COMPLETED", startedAt, finishedAt, null);
 
         when(getScanByIdUseCase.findById(1L)).thenReturn(scan);
         when(scanWebMapper.toResponse(scan)).thenReturn(response);
@@ -140,8 +140,8 @@ class ScanControllerWebMvcTest {
     void findById_shouldReturnScanJsonWithNullFinishedAt() throws Exception {
         LocalDateTime startedAt = LocalDateTime.of(2026, 3, 10, 12, 0, 0);
 
-        Scan scan = new Scan(2L, 1L, ScanStatus.RUNNING, startedAt, null);
-        ScanResponse response = new ScanResponse(2L, 1L, "RUNNING", startedAt, null);
+        Scan scan = new Scan(2L, 1L, ScanStatus.RUNNING, startedAt, null, null);
+        ScanResponse response = new ScanResponse(2L, 1L, "RUNNING", startedAt, null, null);
 
         when(getScanByIdUseCase.findById(2L)).thenReturn(scan);
         when(scanWebMapper.toResponse(scan)).thenReturn(response);
@@ -153,9 +153,32 @@ class ScanControllerWebMvcTest {
                 .andExpect(jsonPath("$.projectId").value(1))
                 .andExpect(jsonPath("$.status").value("RUNNING"))
                 .andExpect(jsonPath("$.startedAt").value("2026-03-10T12:00:00"))
-                .andExpect(jsonPath("$.finishedAt").value(nullValue()));
+                .andExpect(jsonPath("$.finishedAt").value(nullValue()))
+                .andExpect(jsonPath("$.errorMessage").value(nullValue()));
 
         verify(getScanByIdUseCase).findById(2L);
+        verify(scanWebMapper).toResponse(scan);
+    }
+
+    @Test
+    void findById_shouldReturnScanJsonWithErrorMessageWhenFailed() throws Exception {
+        LocalDateTime startedAt = LocalDateTime.of(2026, 3, 10, 12, 0, 0);
+        LocalDateTime finishedAt = LocalDateTime.of(2026, 3, 10, 12, 0, 20);
+
+        Scan scan = new Scan(3L, 1L, ScanStatus.FAILED, startedAt, finishedAt, "Navigation timeout");
+        ScanResponse response = new ScanResponse(3L, 1L, "FAILED", startedAt, finishedAt, "Navigation timeout");
+
+        when(getScanByIdUseCase.findById(3L)).thenReturn(scan);
+        when(scanWebMapper.toResponse(scan)).thenReturn(response);
+
+        mockMvc.perform(get("/api/scans/3"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(3))
+                .andExpect(jsonPath("$.status").value("FAILED"))
+                .andExpect(jsonPath("$.errorMessage").value("Navigation timeout"));
+
+        verify(getScanByIdUseCase).findById(3L);
         verify(scanWebMapper).toResponse(scan);
     }
 

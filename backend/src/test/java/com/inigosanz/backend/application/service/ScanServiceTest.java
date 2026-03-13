@@ -1,10 +1,8 @@
 package com.inigosanz.backend.application.service;
 
-import com.inigosanz.backend.domain.model.AccessibilityIssue;
 import com.inigosanz.backend.domain.model.Project;
 import com.inigosanz.backend.domain.model.Scan;
 import com.inigosanz.backend.domain.model.ScanStatus;
-import com.inigosanz.backend.domain.port.out.AccessibilityIssueRepositoryPort;
 import com.inigosanz.backend.domain.port.out.ProjectRepositoryPort;
 import com.inigosanz.backend.domain.port.out.ScanRepositoryPort;
 import com.inigosanz.backend.shared.exception.ProjectNotFoundException;
@@ -22,6 +20,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,22 +39,24 @@ class ScanServiceTest {
     private ScanRepositoryPort scanRepositoryPort;
 
     @Mock
-    private AccessibilityIssueRepositoryPort accessibilityIssueRepositoryPort;
+    private ScanExecutionService scanExecutionService;
 
     @InjectMocks
     private ScanService scanService;
 
     @Test
-    void shouldCreateScanAndGenerateFakeIssuesWhenProjectExists() {
+    void shouldCreateRunningScanAndTriggerAsyncExecutionWhenProjectExists() {
         Long projectId = 1L;
         Project project = new Project(projectId, "Accessibility Copilot", "https://example.com", LocalDateTime.now());
+        LocalDateTime startedAt = LocalDateTime.now();
 
         Scan savedScan = new Scan(
                 10L,
                 projectId,
-                ScanStatus.COMPLETED,
-                LocalDateTime.now(),
-                LocalDateTime.now()
+                ScanStatus.RUNNING,
+                startedAt,
+                null,
+                null
         );
 
         when(projectRepositoryPort.findById(projectId)).thenReturn(Optional.of(project));
@@ -66,53 +67,14 @@ class ScanServiceTest {
         ArgumentCaptor<Scan> scanCaptor = ArgumentCaptor.forClass(Scan.class);
         verify(scanRepositoryPort, times(1)).save(scanCaptor.capture());
         verify(projectRepositoryPort, times(1)).findById(projectId);
-
-        @SuppressWarnings("unchecked")
-        ArgumentCaptor<List<AccessibilityIssue>> issuesCaptor = ArgumentCaptor.forClass(List.class);
-        verify(accessibilityIssueRepositoryPort, times(1)).saveAll(issuesCaptor.capture());
+        verify(scanExecutionService, times(1)).executeAsync(savedScan.getId(), projectId);
 
         Scan capturedScan = scanCaptor.getValue();
         assertEquals(projectId, capturedScan.getProjectId());
-        assertEquals(ScanStatus.COMPLETED, capturedScan.getStatus());
+        assertEquals(ScanStatus.RUNNING, capturedScan.getStatus());
         assertNotNull(capturedScan.getStartedAt());
-        assertNotNull(capturedScan.getFinishedAt());
-
-        List<AccessibilityIssue> generatedIssues = issuesCaptor.getValue();
-        assertEquals(3, generatedIssues.size());
-        assertEquals(savedScan.getId(), generatedIssues.get(0).getScanId());
-        assertEquals(savedScan.getId(), generatedIssues.get(1).getScanId());
-        assertEquals(savedScan.getId(), generatedIssues.get(2).getScanId());
-
-        assertEquals("img.hero-banner", generatedIssues.get(0).getSelector());
-        assertEquals(
-                "Add a meaningful alt attribute describing the image purpose.",
-                generatedIssues.get(0).getRecommendation()
-        );
-        assertEquals(
-                "https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html",
-                generatedIssues.get(0).getHelpUrl()
-        );
-
-        assertEquals("button.submit-primary", generatedIssues.get(1).getSelector());
-        assertEquals(
-                "Increase text and background contrast to meet at least a 4.5:1 ratio.",
-                generatedIssues.get(1).getRecommendation()
-        );
-        assertEquals(
-                "https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html",
-                generatedIssues.get(1).getHelpUrl()
-        );
-
-        assertEquals("form#contact input[type='email']", generatedIssues.get(2).getSelector());
-        assertEquals(
-                "Associate the input with a visible label using the for and id attributes.",
-                generatedIssues.get(2).getRecommendation()
-        );
-        assertEquals(
-                "https://www.w3.org/WAI/WCAG21/Understanding/labels-or-instructions.html",
-                generatedIssues.get(2).getHelpUrl()
-        );
-
+        assertNull(capturedScan.getFinishedAt());
+        assertNull(capturedScan.getErrorMessage());
         assertSame(savedScan, result);
     }
 
@@ -128,7 +90,7 @@ class ScanServiceTest {
 
         verify(projectRepositoryPort, times(1)).findById(projectId);
         verify(scanRepositoryPort, never()).save(any(Scan.class));
-        verify(accessibilityIssueRepositoryPort, never()).saveAll(any());
+        verify(scanExecutionService, never()).executeAsync(any(), any());
         assertEquals("Project not found", exception.getMessage());
     }
 
@@ -136,7 +98,7 @@ class ScanServiceTest {
     void shouldListScansByProjectWhenProjectExists() {
         Long projectId = 1L;
         Project project = new Project(projectId, "Accessibility Copilot", "https://example.com", LocalDateTime.now());
-        Scan scan = new Scan(1L, projectId, ScanStatus.COMPLETED, LocalDateTime.now(), LocalDateTime.now());
+        Scan scan = new Scan(1L, projectId, ScanStatus.COMPLETED, LocalDateTime.now(), LocalDateTime.now(), null);
 
         when(projectRepositoryPort.findById(projectId)).thenReturn(Optional.of(project));
         when(scanRepositoryPort.findByProjectId(projectId)).thenReturn(List.of(scan));
@@ -166,7 +128,7 @@ class ScanServiceTest {
     @Test
     void shouldReturnScanByIdWhenExists() {
         Long scanId = 1L;
-        Scan scan = new Scan(scanId, 1L, ScanStatus.COMPLETED, LocalDateTime.now(), LocalDateTime.now());
+        Scan scan = new Scan(scanId, 1L, ScanStatus.COMPLETED, LocalDateTime.now(), LocalDateTime.now(), null);
 
         when(scanRepositoryPort.findById(scanId)).thenReturn(Optional.of(scan));
 
@@ -180,7 +142,7 @@ class ScanServiceTest {
     void shouldReturnScanByIdWhenFinishedAtIsNull() {
         Long scanId = 2L;
         LocalDateTime startedAt = LocalDateTime.now();
-        Scan scan = new Scan(scanId, 1L, ScanStatus.RUNNING, startedAt, null);
+        Scan scan = new Scan(scanId, 1L, ScanStatus.RUNNING, startedAt, null, null);
 
         when(scanRepositoryPort.findById(scanId)).thenReturn(Optional.of(scan));
 
