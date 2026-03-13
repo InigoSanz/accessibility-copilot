@@ -45,6 +45,12 @@ export class ProjectService {
       .pipe(mergeMap((response) => this.normalizeResponse<Scan>(response)));
   }
 
+  getScanById(scanId: number): Observable<Scan> {
+    return this.scanController
+      .findById(scanId)
+      .pipe(mergeMap((response) => this.normalizeResponse<Scan>(response)));
+  }
+
   private normalizeResponse<T>(response: unknown): Observable<T> {
     if (response instanceof Blob) {
       return from(response.text()).pipe(

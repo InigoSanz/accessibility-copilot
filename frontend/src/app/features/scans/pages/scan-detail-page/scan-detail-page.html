@@ -1,0 +1,39 @@
+<section class="scan-detail-page">
+  @if (scan?.projectId) {
+    <a class="back-link" [routerLink]="['/projects', scan?.projectId]">← Back to project</a>
+  }
+
+  <section class="detail-section" aria-labelledby="scan-overview-title">
+    <h1 id="scan-overview-title">Scan Overview</h1>
+
+    @if (loading) {
+      <p class="status-message">Loading scan...</p>
+    } @else if (error) {
+      <p class="status-message status-message--error">{{ error }}</p>
+    } @else if (scan) {
+      <article class="scan-card">
+        <div class="overview-row">
+          <span class="label">Status</span>
+          <span class="value">{{ scan.status || 'N/A' }}</span>
+        </div>
+
+        <div class="overview-row">
+          <span class="label">Started at</span>
+          <span class="value">{{ scan.startedAt ? (scan.startedAt | date: 'medium') : 'N/A' }}</span>
+        </div>
+
+        <div class="overview-row">
+          <span class="label">Finished at</span>
+          <span class="value">{{ scan.finishedAt ? (scan.finishedAt | date: 'medium') : 'N/A' }}</span>
+        </div>
+
+        @if (durationText()) {
+          <div class="overview-row">
+            <span class="label">Approx. duration</span>
+            <span class="value">{{ durationText() }}</span>
+          </div>
+        }
+      </article>
+    }
+  </section>
+</section>

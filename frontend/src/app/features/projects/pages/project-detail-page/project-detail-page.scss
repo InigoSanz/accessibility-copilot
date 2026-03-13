@@ -98,6 +98,21 @@
   color: #1f2937;
 }
 
+.secondary-button {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  color: #111827;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.secondary-button:hover {
+  background-color: #f9fafb;
+}
+
 .status-message {
   margin: 0;
   padding: 1rem;

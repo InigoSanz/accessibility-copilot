@@ -7,6 +7,13 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'scans/:id',
+    loadComponent: () =>
+      import('./features/scans/pages/scan-detail-page/scan-detail-page').then(
+        (m) => m.ScanDetailPage,
+      ),
+  },
+  {
     path: 'projects/:id',
     loadComponent: () =>
       import('./features/projects/pages/project-detail-page/project-detail-page').then(

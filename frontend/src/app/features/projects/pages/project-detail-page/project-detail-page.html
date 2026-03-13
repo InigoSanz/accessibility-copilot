@@ -60,6 +60,9 @@
             <p class="scan-status">{{ scan.status }}</p>
             <p class="scan-meta">Started {{ scan.startedAt | date: 'medium' }}</p>
             <p class="scan-meta">Finished {{ scan.finishedAt | date: 'medium' }}</p>
+            @if (scan.id) {
+              <a class="secondary-button" [routerLink]="['/scans', scan.id]">View results</a>
+            }
           </article>
         }
       </div>
