@@ -5,7 +5,7 @@ import {
   provideZoneChangeDetection,
 } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideTransloco, translocoConfig } from '@jsverse/transloco';
 
 import { provideApi } from './api-client/provide-api';
@@ -28,6 +28,11 @@ export const appConfig: ApplicationConfig = {
       }),
       loader: TranslocoHttpLoader,
     }),
-    provideRouter(routes),
+    provideRouter(
+      routes,
+      withInMemoryScrolling({
+        anchorScrolling: 'enabled',
+      }),
+    ),
   ],
 };

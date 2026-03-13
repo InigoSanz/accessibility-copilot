@@ -63,7 +63,7 @@ export class App {
     }
   }
 
-  navigateTo(path: '/projects' | '/scans', event: MouseEvent): void {
+  navigateTo(path: '/projects' | '/scans' | '/wcag-guide', event: MouseEvent): void {
     event.preventDefault();
     this.router.navigateByUrl(path);
   }
@@ -74,6 +74,10 @@ export class App {
 
   isScansRouteActive(): boolean {
     return this.router.isActive('/scans', this.matchOptions);
+  }
+
+  isWcagGuideRouteActive(): boolean {
+    return this.router.isActive('/wcag-guide', this.matchOptions);
   }
 
   private updateDocumentLanguageMetadata(): void {

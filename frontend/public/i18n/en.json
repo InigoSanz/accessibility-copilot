@@ -31,6 +31,7 @@
       "homeAria": "Accessibility Copilot home",
       "mainAria": "Main navigation",
       "projects": "Projects",
+      "wcagGuide": "WCAG Guide",
       "scans": "Scans"
     },
     "language": {
@@ -170,6 +171,7 @@
       "fixTitle": "How to fix",
       "recommendationTitle": "Detected recommendation",
       "helpUrlTitle": "Reference",
+      "readGuideLink": "Open WCAG Guide to understand and prioritize this result",
       "levels": {
         "high": "High impact",
         "medium": "Medium impact",
@@ -225,6 +227,64 @@
       "empty": "No scans yet. Run your first scan from a project page.",
       "noMatches": "No scans match the selected filters.",
       "loadError": "Could not load scan history. Please try again."
+    }
+  },
+  "wcagGuide": {
+    "hero": {
+      "eyebrow": "WCAG Guide",
+      "title": "What WCAG is and how to use this app",
+      "description": "A quick guide to understand what Accessibility Copilot evaluates and how to turn findings into real improvements."
+    },
+    "blocks": {
+      "whatAppDoes": {
+        "title": "What the app does",
+        "description": "It scans your pages and detects accessibility issues, showing severity, WCAG criterion, and actionable recommendations."
+      },
+      "whatWcagIs": {
+        "title": "What WCAG is",
+        "description": "WCAG is the international web accessibility standard. It defines practices so people with or without disabilities can use your site."
+      },
+      "whyItMatters": {
+        "title": "Why it matters",
+        "description": "It improves real user experience, reduces friction in key tasks, and supports legal and digital quality expectations."
+      },
+      "howToRead": {
+        "title": "How to read results",
+        "item1": "Severity indicates rough urgency (critical, serious, moderate, minor).",
+        "item2": "Rule and WCAG criterion explain which standard is not met.",
+        "item3": "Issue guidance explains user impact and concrete remediation steps."
+      },
+      "flow": {
+        "title": "Recommended flow",
+        "step1": "Run a project scan.",
+        "step2": "Prioritize high-impact issues first.",
+        "step3": "Fix and validate on the real page.",
+        "step4": "Run the scan again to confirm improvements."
+      },
+      "impactScale": {
+        "title": "Impact scale",
+        "aria": "Issue impact scale",
+        "highTitle": "High impact",
+        "highDescription": "May block tasks or comprehension for screen-reader and keyboard users.",
+        "mediumTitle": "Medium impact",
+        "mediumDescription": "Affects navigation or clarity in common scenarios, usually with partial workarounds.",
+        "lowTitle": "Low impact",
+        "lowDescription": "Usually not blocking, but fixing it improves consistency, quality, and overall UX."
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "q1": "Does this app replace manual accessibility audits?",
+      "a1": "No. It automates an important part, but manual review is still essential for real context and user experience.",
+      "q2": "Should I fix everything at once?",
+      "a2": "Not required. Start with high-impact issues, then medium, then low for a sustainable workflow.",
+      "q3": "Does every rule always apply the same way?",
+      "a3": "Not always. Use guidance as a baseline and validate each case in your actual UI and user flow."
+    },
+    "actions": {
+      "backToIssue": "Back to issue",
+      "goProjects": "Go to projects",
+      "goScans": "Open scans"
     }
   },
   "notFound": {

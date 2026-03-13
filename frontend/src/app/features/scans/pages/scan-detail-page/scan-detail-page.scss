@@ -161,6 +161,11 @@
   word-break: break-word;
 }
 
+.issue-card--highlight {
+  outline: 2px solid color-mix(in srgb, var(--ac-primary-500) 35%, white);
+  outline-offset: 2px;
+}
+
 .issue-guidance-toggle-wrap {
   margin-top: 0.35rem;
 }
@@ -243,6 +248,11 @@
   border-radius: var(--ac-radius-sm);
   padding: 0.45rem 0.55rem;
   background: var(--ac-surface);
+}
+
+.issue-guide-link {
+  font-size: 0.84rem;
+  font-weight: 650;
 }
 
 @media (max-width: 900px) {

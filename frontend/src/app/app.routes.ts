@@ -22,6 +22,14 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'wcag-guide',
+    pathMatch: 'full',
+    loadComponent: () =>
+      import('./layout/pages/wcag-guide-page/wcag-guide-page').then(
+        (m) => m.WcagGuidePage,
+      ),
+  },
+  {
     path: 'projects/:id',
     loadComponent: () =>
       import('./features/projects/pages/project-detail-page/project-detail-page').then(

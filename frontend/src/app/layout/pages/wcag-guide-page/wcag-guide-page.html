@@ -1,0 +1,95 @@
+<section class="wcag-guide-page page-shell" aria-labelledby="wcag-guide-title">
+  <header class="page-hero">
+    <span class="page-hero__eyebrow">{{ 'wcagGuide.hero.eyebrow' | transloco }}</span>
+    <h1 id="wcag-guide-title">{{ 'wcagGuide.hero.title' | transloco }}</h1>
+    <p>{{ 'wcagGuide.hero.description' | transloco }}</p>
+  </header>
+
+  <div class="guide-grid">
+    <article class="surface-card guide-card">
+      <h2>{{ 'wcagGuide.blocks.whatAppDoes.title' | transloco }}</h2>
+      <p>{{ 'wcagGuide.blocks.whatAppDoes.description' | transloco }}</p>
+    </article>
+
+    <article class="surface-card guide-card">
+      <h2>{{ 'wcagGuide.blocks.whatWcagIs.title' | transloco }}</h2>
+      <p>{{ 'wcagGuide.blocks.whatWcagIs.description' | transloco }}</p>
+    </article>
+
+    <article class="surface-card guide-card">
+      <h2>{{ 'wcagGuide.blocks.whyItMatters.title' | transloco }}</h2>
+      <p>{{ 'wcagGuide.blocks.whyItMatters.description' | transloco }}</p>
+    </article>
+
+    <article class="surface-card guide-card" id="wcag-guide-how-to-read">
+      <h2>{{ 'wcagGuide.blocks.howToRead.title' | transloco }}</h2>
+      <ul>
+        <li>{{ 'wcagGuide.blocks.howToRead.item1' | transloco }}</li>
+        <li>{{ 'wcagGuide.blocks.howToRead.item2' | transloco }}</li>
+        <li>{{ 'wcagGuide.blocks.howToRead.item3' | transloco }}</li>
+      </ul>
+    </article>
+
+    <article class="surface-card guide-card guide-card--flow">
+      <h2>{{ 'wcagGuide.blocks.flow.title' | transloco }}</h2>
+      <ol>
+        <li>{{ 'wcagGuide.blocks.flow.step1' | transloco }}</li>
+        <li>{{ 'wcagGuide.blocks.flow.step2' | transloco }}</li>
+        <li>{{ 'wcagGuide.blocks.flow.step3' | transloco }}</li>
+        <li>{{ 'wcagGuide.blocks.flow.step4' | transloco }}</li>
+      </ol>
+    </article>
+
+    <article class="surface-card guide-card guide-card--impact">
+      <h2>{{ 'wcagGuide.blocks.impactScale.title' | transloco }}</h2>
+
+      <div class="impact-scale" role="list" [attr.aria-label]="'wcagGuide.blocks.impactScale.aria' | transloco">
+        <div class="impact-item impact-item--high" role="listitem">
+          <strong>{{ 'wcagGuide.blocks.impactScale.highTitle' | transloco }}</strong>
+          <p>{{ 'wcagGuide.blocks.impactScale.highDescription' | transloco }}</p>
+        </div>
+        <div class="impact-item impact-item--medium" role="listitem">
+          <strong>{{ 'wcagGuide.blocks.impactScale.mediumTitle' | transloco }}</strong>
+          <p>{{ 'wcagGuide.blocks.impactScale.mediumDescription' | transloco }}</p>
+        </div>
+        <div class="impact-item impact-item--low" role="listitem">
+          <strong>{{ 'wcagGuide.blocks.impactScale.lowTitle' | transloco }}</strong>
+          <p>{{ 'wcagGuide.blocks.impactScale.lowDescription' | transloco }}</p>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <section class="guide-faq detail-section" aria-labelledby="wcag-guide-faq-title">
+    <div class="section-head">
+      <h2 id="wcag-guide-faq-title">{{ 'wcagGuide.faq.title' | transloco }}</h2>
+    </div>
+
+    <div class="faq-list">
+      <article class="surface-card faq-card">
+        <h3>{{ 'wcagGuide.faq.q1' | transloco }}</h3>
+        <p>{{ 'wcagGuide.faq.a1' | transloco }}</p>
+      </article>
+
+      <article class="surface-card faq-card">
+        <h3>{{ 'wcagGuide.faq.q2' | transloco }}</h3>
+        <p>{{ 'wcagGuide.faq.a2' | transloco }}</p>
+      </article>
+
+      <article class="surface-card faq-card">
+        <h3>{{ 'wcagGuide.faq.q3' | transloco }}</h3>
+        <p>{{ 'wcagGuide.faq.a3' | transloco }}</p>
+      </article>
+    </div>
+  </section>
+
+  <div class="guide-actions">
+    @if (canReturnToIssue && returnPath) {
+      <a class="btn btn-ghost" [routerLink]="returnPath" [fragment]="returnFragment || undefined">
+        {{ 'wcagGuide.actions.backToIssue' | transloco }}
+      </a>
+    }
+    <a class="btn btn-primary" routerLink="/projects">{{ 'wcagGuide.actions.goProjects' | transloco }}</a>
+    <a class="btn btn-secondary" routerLink="/scans">{{ 'wcagGuide.actions.goScans' | transloco }}</a>
+  </div>
+</section>

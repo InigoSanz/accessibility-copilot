@@ -391,6 +391,7 @@ const ISSUE_GUIDANCE_CATALOG: Record<'es' | 'en', Record<SupportedGuidanceRule, 
 export class ScanDetailPage implements OnInit {
   private static readonly POLLING_INTERVAL_MS = 4000;
   private static readonly SUMMARY_SEVERITY_ORDER = ['critical', 'serious', 'moderate', 'minor'] as const;
+  private static readonly ISSUE_HIGHLIGHT_DURATION_MS = 2600;
 
   private readonly route = inject(ActivatedRoute);
   private readonly scanService = inject(ScanService);
@@ -405,6 +406,8 @@ export class ScanDetailPage implements OnInit {
   summary: ScanSummaryResponse | null = null;
   issues: AccessibilityIssueResponse[] = [];
   private readonly expandedIssueKeys = new Set<string>();
+  highlightedIssueKey: string | null = null;
+  private highlightResetTimeoutId: number | null = null;
 
   get durationText(): string | null {
     if (!this.scan?.startedAt || !this.scan?.finishedAt) {
@@ -442,6 +445,17 @@ export class ScanDetailPage implements OnInit {
 
     this.loading = true;
     this.error = null;
+
+    this.route.fragment.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((fragment) => {
+      this.highlightIssueFromFragment(fragment);
+    });
+
+    this.destroyRef.onDestroy(() => {
+      if (this.highlightResetTimeoutId !== null) {
+        window.clearTimeout(this.highlightResetTimeoutId);
+      }
+    });
+
     this.loadScanWithPolling(scanId);
   }
 
@@ -594,6 +608,10 @@ export class ScanDetailPage implements OnInit {
     return `impact-badge impact-badge--${level}`;
   }
 
+  isIssueHighlighted(issue: AccessibilityIssueResponse, index: number): boolean {
+    return this.highlightedIssueKey === this.issueKey(issue, index);
+  }
+
   summarySeverityClass(severity: string | undefined): string {
     return `severity-item ${this.summarySeverityModifier(severity)}`;
   }
@@ -644,6 +662,26 @@ export class ScanDetailPage implements OnInit {
 
   private normalizeSeverity(value: string | undefined): string {
     return (value ?? '').trim().toLowerCase();
+  }
+
+  private highlightIssueFromFragment(fragment: string | null): void {
+    if (!fragment || !fragment.startsWith('issue-')) {
+      return;
+    }
+
+    this.highlightedIssueKey = fragment;
+
+    if (this.highlightResetTimeoutId !== null) {
+      window.clearTimeout(this.highlightResetTimeoutId);
+    }
+
+    this.highlightResetTimeoutId = window.setTimeout(() => {
+      this.highlightedIssueKey = null;
+      this.highlightResetTimeoutId = null;
+      this.changeDetectorRef.markForCheck();
+    }, ScanDetailPage.ISSUE_HIGHLIGHT_DURATION_MS);
+
+    this.changeDetectorRef.markForCheck();
   }
 
   private activeGuidanceLanguage(): 'es' | 'en' {

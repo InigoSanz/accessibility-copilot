@@ -24,6 +24,14 @@
 					{{ 'app.navigation.projects' | transloco }}
 				</a>
 				<a
+					href="/wcag-guide"
+					(click)="navigateTo('/wcag-guide', $event)"
+					[class.topbar-nav__link--active]="isWcagGuideRouteActive()"
+					class="topbar-nav__link"
+				>
+					{{ 'app.navigation.wcagGuide' | transloco }}
+				</a>
+				<a
 					href="/scans"
 					(click)="navigateTo('/scans', $event)"
 					[class.topbar-nav__link--active]="isScansRouteActive()"
@@ -61,6 +69,7 @@
 
 			<nav class="app-footer__nav" [attr.aria-label]="'app.footer.navigationAria' | transloco">
 				<a href="/projects" (click)="navigateTo('/projects', $event)">{{ 'app.navigation.projects' | transloco }}</a>
+				<a href="/wcag-guide" (click)="navigateTo('/wcag-guide', $event)">{{ 'app.navigation.wcagGuide' | transloco }}</a>
 				<a href="/scans" (click)="navigateTo('/scans', $event)">{{ 'app.navigation.scans' | transloco }}</a>
 			</nav>
 		</div>

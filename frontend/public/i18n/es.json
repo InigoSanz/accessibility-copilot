@@ -31,6 +31,7 @@
       "homeAria": "Inicio de Accessibility Copilot",
       "mainAria": "Navegación principal",
       "projects": "Proyectos",
+      "wcagGuide": "Guía WCAG",
       "scans": "Scans"
     },
     "language": {
@@ -170,6 +171,7 @@
       "fixTitle": "Cómo corregirlo",
       "recommendationTitle": "Recomendación detectada",
       "helpUrlTitle": "Referencia",
+      "readGuideLink": "Ver en Guía WCAG cómo interpretar y priorizar este resultado",
       "levels": {
         "high": "Impacto alto",
         "medium": "Impacto medio",
@@ -225,6 +227,64 @@
       "empty": "Aún no hay scans. Ejecuta el primero desde una página de proyecto.",
       "noMatches": "Ningún scan coincide con los filtros seleccionados.",
       "loadError": "No se pudo cargar el historial de scans. Inténtalo de nuevo."
+    }
+  },
+  "wcagGuide": {
+    "hero": {
+      "eyebrow": "Guía WCAG",
+      "title": "Qué es WCAG y cómo usar esta app",
+      "description": "Una guía rápida para entender qué evalúa Accessibility Copilot y cómo convertir incidencias en mejoras reales."
+    },
+    "blocks": {
+      "whatAppDoes": {
+        "title": "Qué hace la app",
+        "description": "Analiza tus páginas y detecta incidencias de accesibilidad, mostrando severidad, criterio WCAG y recomendaciones accionables."
+      },
+      "whatWcagIs": {
+        "title": "Qué es WCAG",
+        "description": "WCAG es el estándar internacional de accesibilidad web. Define prácticas para que cualquier persona, con o sin discapacidad, pueda usar tu sitio."
+      },
+      "whyItMatters": {
+        "title": "Por qué importa",
+        "description": "Mejora la experiencia real de usuarios, reduce fricción en tareas clave y ayuda a cumplir expectativas legales y de calidad digital."
+      },
+      "howToRead": {
+        "title": "Cómo leer resultados",
+        "item1": "Severidad: indica urgencia orientativa (crítica, seria, moderada, menor).",
+        "item2": "Regla y criterio WCAG: describen qué estándar se incumple.",
+        "item3": "Guía por issue: explica impacto y pasos concretos para corregir."
+      },
+      "flow": {
+        "title": "Flujo recomendado",
+        "step1": "Ejecuta un scan del proyecto.",
+        "step2": "Prioriza primero impactos altos.",
+        "step3": "Corrige y verifica en la página real.",
+        "step4": "Repite scan para confirmar mejoras."
+      },
+      "impactScale": {
+        "title": "Escala de impacto",
+        "aria": "Escala de impacto de incidencias",
+        "highTitle": "Impacto alto",
+        "highDescription": "Puede bloquear tareas o comprensión para usuarios de lector de pantalla o teclado.",
+        "mediumTitle": "Impacto medio",
+        "mediumDescription": "Afecta navegación o claridad en escenarios frecuentes, pero suele tener workaround.",
+        "lowTitle": "Impacto bajo",
+        "lowDescription": "No suele bloquear, pero mejora calidad, consistencia y experiencia global al corregirse."
+      }
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "q1": "¿Esta app sustituye una auditoría manual?",
+      "a1": "No. Automatiza una parte muy útil, pero la revisión manual sigue siendo clave para contexto y experiencia real.",
+      "q2": "¿Debo arreglar todo de una vez?",
+      "a2": "No es necesario. Empieza por impacto alto, luego medio y finalmente bajo para avanzar de forma sostenible.",
+      "q3": "¿Cada regla aplica siempre igual?",
+      "a3": "No siempre. Usa la guía como base y valida el caso concreto en tu interfaz y flujo de usuario."
+    },
+    "actions": {
+      "backToIssue": "Volver al issue",
+      "goProjects": "Ir a proyectos",
+      "goScans": "Ver scans"
     }
   },
   "notFound": {

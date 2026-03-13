@@ -1,0 +1,122 @@
+.guide-grid {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.guide-card {
+  padding: 1rem 1.1rem;
+  display: grid;
+  gap: 0.5rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.02rem;
+    color: var(--ac-text-strong);
+  }
+
+  p,
+  li {
+    color: var(--ac-text-default);
+    font-size: 0.92rem;
+    line-height: 1.4;
+  }
+
+  ul,
+  ol {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.3rem;
+  }
+}
+
+.guide-card--flow,
+.guide-card--impact {
+  grid-column: 1 / -1;
+}
+
+.impact-scale {
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.impact-item {
+  border: 1px solid var(--ac-border);
+  border-radius: var(--ac-radius-sm);
+  padding: 0.6rem 0.7rem;
+  display: grid;
+  gap: 0.25rem;
+
+  strong {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.86rem;
+  }
+}
+
+.impact-item--high {
+  background: var(--ac-critical-bg);
+  color: var(--ac-critical-text);
+}
+
+.impact-item--medium {
+  background: var(--ac-moderate-bg);
+  color: var(--ac-moderate-text);
+}
+
+.impact-item--low {
+  background: var(--ac-minor-bg);
+  color: var(--ac-minor-text);
+}
+
+.guide-faq {
+  margin-top: 0.85rem;
+}
+
+.faq-list {
+  margin-top: 0.35rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.faq-card {
+  padding: 0.9rem 1rem;
+  display: grid;
+  gap: 0.35rem;
+
+  h3 {
+    margin: 0;
+    color: var(--ac-text-strong);
+    font-size: 0.95rem;
+  }
+
+  p {
+    margin: 0;
+    color: var(--ac-text-default);
+    font-size: 0.9rem;
+  }
+}
+
+.guide-actions {
+  margin-top: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+@media (max-width: 860px) {
+  .guide-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .impact-scale {
+    grid-template-columns: 1fr;
+  }
+}

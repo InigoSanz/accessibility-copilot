@@ -108,7 +108,12 @@
         } @else {
           <div class="issues-list" role="list" [attr.aria-label]="'scanDetail.issues.aria' | transloco">
             @for (issue of issues; track issue.id ?? $index) {
-              <article class="surface-card issue-card" role="listitem">
+              <article
+                class="surface-card issue-card"
+                role="listitem"
+                [attr.id]="issueKey(issue, $index)"
+                [class.issue-card--highlight]="isIssueHighlighted(issue, $index)"
+              >
                 <div class="issue-header">
                   <strong class="issue-rule">{{ issue.ruleCode || ('scanDetail.issues.unknownRule' | transloco) }}</strong>
                   <span [class]="issueSeverityClass(issue.severity)">{{ ('severity.' + (issue.severity?.toLowerCase() ?? 'unknown')) | transloco }}</span>
@@ -179,6 +184,20 @@
                         <a [href]="issue.helpUrl" target="_blank" rel="noopener noreferrer">{{ issue.helpUrl }}</a>
                       </div>
                     }
+
+                    <div class="issue-guidance__block">
+                      <a
+                        class="issue-guide-link"
+                        [routerLink]="['/wcag-guide']"
+                        fragment="wcag-guide-how-to-read"
+                        [queryParams]="{
+                          returnPath: scan.id ? '/scans/' + scan.id : null,
+                          returnFragment: issueKey(issue, $index)
+                        }"
+                      >
+                        {{ 'scanDetail.issueGuide.readGuideLink' | transloco }}
+                      </a>
+                    </div>
                   </section>
                 }
               </article>
