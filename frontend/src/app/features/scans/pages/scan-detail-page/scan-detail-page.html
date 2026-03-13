@@ -124,6 +124,63 @@
                 @if (issue.pageUrl) {
                   <a [href]="issue.pageUrl" target="_blank" rel="noopener noreferrer">{{ issue.pageUrl }}</a>
                 }
+
+                <div class="issue-guidance-toggle-wrap">
+                  <button
+                    type="button"
+                    class="btn btn-ghost issue-guidance-toggle"
+                    (click)="toggleIssueGuidance(issue, $index)"
+                    [attr.aria-expanded]="isIssueExpanded(issue, $index)"
+                  >
+                    @if (isIssueExpanded(issue, $index)) {
+                      {{ 'scanDetail.issueGuide.hide' | transloco }}
+                    } @else {
+                      {{ 'scanDetail.issueGuide.show' | transloco }}
+                    }
+                  </button>
+                </div>
+
+                @if (isIssueExpanded(issue, $index)) {
+                  <section class="issue-guidance" [attr.aria-label]="'scanDetail.issueGuide.aria' | transloco">
+                    <div class="issue-guidance__block">
+                      <h3>{{ 'scanDetail.issueGuide.whyTitle' | transloco }}</h3>
+                      <p>{{ issueGuidance(issue).why }}</p>
+                    </div>
+
+                    <div class="issue-guidance__block">
+                      <div class="issue-guidance__title-row">
+                        <h3>{{ 'scanDetail.issueGuide.impactTitle' | transloco }}</h3>
+                        <span [class]="issueImpactClass(issue)">
+                          {{ ('scanDetail.issueGuide.levels.' + issueImpactLevel(issue)) | transloco }}
+                        </span>
+                      </div>
+                      <p>{{ issueGuidance(issue).impact }}</p>
+                    </div>
+
+                    <div class="issue-guidance__block">
+                      <h3>{{ 'scanDetail.issueGuide.fixTitle' | transloco }}</h3>
+                      <ol>
+                        @for (step of issueGuidance(issue).fixSteps; track step) {
+                          <li>{{ step }}</li>
+                        }
+                      </ol>
+                    </div>
+
+                    @if (issueRecommendedFix(issue); as recommendationText) {
+                      <div class="issue-guidance__block issue-guidance__block--hint">
+                        <h3>{{ 'scanDetail.issueGuide.recommendationTitle' | transloco }}</h3>
+                        <p>{{ recommendationText }}</p>
+                      </div>
+                    }
+
+                    @if (issue.helpUrl) {
+                      <div class="issue-guidance__block">
+                        <h3>{{ 'scanDetail.issueGuide.helpUrlTitle' | transloco }}</h3>
+                        <a [href]="issue.helpUrl" target="_blank" rel="noopener noreferrer">{{ issue.helpUrl }}</a>
+                      </div>
+                    }
+                  </section>
+                }
               </article>
             }
           </div>

@@ -161,6 +161,28 @@
       "wcag": "WCAG",
       "selector": "Selector"
     },
+    "issueGuide": {
+      "show": "What it means and how to fix it",
+      "hide": "Hide explanation",
+      "aria": "Issue remediation guidance",
+      "whyTitle": "Why this appears",
+      "impactTitle": "User impact",
+      "fixTitle": "How to fix",
+      "recommendationTitle": "Detected recommendation",
+      "helpUrlTitle": "Reference",
+      "levels": {
+        "high": "High impact",
+        "medium": "Medium impact",
+        "low": "Low impact"
+      },
+      "fallback": {
+        "why": "This rule detected a pattern that can reduce accessibility for some users.",
+        "impact": "It may affect navigation, comprehension, or interaction for keyboard and screen-reader users.",
+        "step1": "Inspect the element pointed by the selector and verify semantic HTML usage.",
+        "step2": "Ensure accessible text, correct structure, and ARIA attributes only when needed.",
+        "step3": "Run the scan again to confirm the issue is resolved."
+      }
+    },
     "messages": {
       "loading": "Loading scan, summary and issues...",
       "polling": "Auto-refreshing this scan while backend status is RUNNING.",

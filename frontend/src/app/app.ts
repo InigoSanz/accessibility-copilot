@@ -13,6 +13,11 @@ import { AppLanguage, LanguageService } from './core/i18n/language.service';
   styleUrl: './app.scss',
 })
 export class App {
+  private static readonly FALLBACK_TITLES: Record<AppLanguage, string> = {
+    es: 'Accessibility Copilot | Espacio de escaneo',
+    en: 'Accessibility Copilot | Scanning workspace',
+  };
+
   private readonly router = inject(Router);
   private readonly titleService = inject(Title);
   private readonly translocoService = inject(TranslocoService);
@@ -32,11 +37,19 @@ export class App {
 
   constructor() {
     this.languageService.initializeLanguage();
-    this.updateDocumentMetadata();
+    this.updateDocumentLanguageMetadata();
+    this.titleService.setTitle(App.FALLBACK_TITLES[this.selectedLanguage()]);
+
+    this.translocoService
+      .selectTranslate('app.meta.title')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((translatedTitle) => {
+        this.titleService.setTitle(this.resolveDocumentTitle(translatedTitle, this.selectedLanguage()));
+      });
 
     this.translocoService.langChanges$
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.updateDocumentMetadata());
+      .subscribe(() => this.updateDocumentLanguageMetadata());
   }
 
   setLanguage(language: AppLanguage): void {
@@ -63,11 +76,18 @@ export class App {
     return this.router.isActive('/scans', this.matchOptions);
   }
 
-  private updateDocumentMetadata(): void {
-    this.titleService.setTitle(this.translocoService.translate('app.meta.title'));
+  private updateDocumentLanguageMetadata(): void {
     const language = this.selectedLanguage();
     document.documentElement.lang = language;
     document.documentElement.dir = this.resolveDirection(language);
+  }
+
+  private resolveDocumentTitle(translatedTitle: string, language: AppLanguage): string {
+    if (!translatedTitle || translatedTitle === 'app.meta.title') {
+      return App.FALLBACK_TITLES[language];
+    }
+
+    return translatedTitle;
   }
 
   private resolveDirection(language: AppLanguage): 'ltr' | 'rtl' {

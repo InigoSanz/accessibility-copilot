@@ -161,6 +161,28 @@
       "wcag": "WCAG",
       "selector": "Selector"
     },
+    "issueGuide": {
+      "show": "Qué significa y cómo corregir",
+      "hide": "Ocultar explicación",
+      "aria": "Guía de corrección de incidencia",
+      "whyTitle": "Por qué aparece",
+      "impactTitle": "En qué afecta",
+      "fixTitle": "Cómo corregirlo",
+      "recommendationTitle": "Recomendación detectada",
+      "helpUrlTitle": "Referencia",
+      "levels": {
+        "high": "Impacto alto",
+        "medium": "Impacto medio",
+        "low": "Impacto bajo"
+      },
+      "fallback": {
+        "why": "Esta regla detecta un patrón que puede reducir la accesibilidad para algunos usuarios.",
+        "impact": "Puede dificultar navegación, comprensión o interacción con teclado y lectores de pantalla.",
+        "step1": "Revisa el elemento marcado por el selector y valida su semántica HTML.",
+        "step2": "Asegura texto accesible, estructura correcta y atributos ARIA solo cuando sean necesarios.",
+        "step3": "Vuelve a lanzar el scan para confirmar que la incidencia se resolvió."
+      }
+    },
     "messages": {
       "loading": "Cargando scan, resumen e incidencias...",
       "polling": "Autoactualizando este scan mientras el estado backend está en RUNNING.",
