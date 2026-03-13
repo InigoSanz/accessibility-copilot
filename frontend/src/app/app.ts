@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { IsActiveMatchOptions, Router, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -8,4 +8,17 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {}
+export class App {
+  private readonly matchOptions: IsActiveMatchOptions = {
+    paths: 'subset',
+    queryParams: 'ignored',
+    matrixParams: 'ignored',
+    fragment: 'ignored',
+  };
+
+  constructor(private readonly router: Router) {}
+
+  isProjectsRouteActive(): boolean {
+    return this.router.isActive('/projects', this.matchOptions);
+  }
+}

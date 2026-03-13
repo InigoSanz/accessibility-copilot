@@ -1,7 +1,7 @@
 <div class="app-shell">
 	<header class="app-topbar">
 		<div class="app-topbar__inner">
-			<a class="brand" [routerLink]="['/projects']" aria-label="Accessibility Copilot home">
+			<a class="brand" href="/projects" aria-label="Accessibility Copilot home">
 				<img src="images/logo.png" alt="Accessibility Copilot" class="brand__logo" />
 				<div class="brand__text">
 					<strong>Accessibility Copilot</strong>
@@ -11,9 +11,8 @@
 
 			<nav class="topbar-nav" aria-label="Main navigation">
 				<a
-					[routerLink]="['/projects']"
-					routerLinkActive="topbar-nav__link--active"
-					[routerLinkActiveOptions]="{ exact: false }"
+					href="/projects"
+					[class.topbar-nav__link--active]="isProjectsRouteActive()"
 					class="topbar-nav__link"
 				>
 					Projects
