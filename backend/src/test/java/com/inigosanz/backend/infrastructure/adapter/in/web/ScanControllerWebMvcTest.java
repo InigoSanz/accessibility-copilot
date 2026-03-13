@@ -25,6 +25,7 @@ import java.util.List;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -132,6 +133,29 @@ class ScanControllerWebMvcTest {
                 .andExpect(jsonPath("$.finishedAt").value("2026-03-10T12:00:01"));
 
         verify(getScanByIdUseCase).findById(1L);
+        verify(scanWebMapper).toResponse(scan);
+    }
+
+    @Test
+    void findById_shouldReturnScanJsonWithNullFinishedAt() throws Exception {
+        LocalDateTime startedAt = LocalDateTime.of(2026, 3, 10, 12, 0, 0);
+
+        Scan scan = new Scan(2L, 1L, ScanStatus.RUNNING, startedAt, null);
+        ScanResponse response = new ScanResponse(2L, 1L, "RUNNING", startedAt, null);
+
+        when(getScanByIdUseCase.findById(2L)).thenReturn(scan);
+        when(scanWebMapper.toResponse(scan)).thenReturn(response);
+
+        mockMvc.perform(get("/api/scans/2"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(2))
+                .andExpect(jsonPath("$.projectId").value(1))
+                .andExpect(jsonPath("$.status").value("RUNNING"))
+                .andExpect(jsonPath("$.startedAt").value("2026-03-10T12:00:00"))
+                .andExpect(jsonPath("$.finishedAt").value(nullValue()));
+
+        verify(getScanByIdUseCase).findById(2L);
         verify(scanWebMapper).toResponse(scan);
     }
 

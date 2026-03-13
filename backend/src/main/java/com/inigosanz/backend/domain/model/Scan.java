@@ -16,7 +16,7 @@ public class Scan {
         this.projectId = Objects.requireNonNull(projectId, "projectId is required");
         this.status = Objects.requireNonNull(status, "status is required");
         this.startedAt = Objects.requireNonNull(startedAt, "startedAt is required");
-        this.finishedAt = Objects.requireNonNull(finishedAt, "finishedAt is required");
+        this.finishedAt = finishedAt;
     }
 
     public Long getId() {

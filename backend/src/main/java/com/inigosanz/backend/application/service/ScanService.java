@@ -41,12 +41,13 @@ public class ScanService implements CreateScanUseCase, ListScansByProjectUseCase
         projectRepositoryPort.findById(projectId)
                 .orElseThrow(ProjectNotFoundException::new);
 
+        LocalDateTime startedAt = LocalDateTime.now();
         Scan scan = new Scan(
                 null,
                 projectId,
                 ScanStatus.COMPLETED,
-                LocalDateTime.now(),
-                LocalDateTime.now()
+                startedAt,
+                startedAt
         );
 
         Scan savedScan = scanRepositoryPort.save(scan);

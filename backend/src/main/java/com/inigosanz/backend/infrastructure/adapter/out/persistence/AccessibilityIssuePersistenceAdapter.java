@@ -22,7 +22,7 @@ public class AccessibilityIssuePersistenceAdapter implements AccessibilityIssueR
 
     @Override
     public List<AccessibilityIssue> findByScanId(Long scanId) {
-        List<AccessibilityIssueEntity> entities = jpaAccessibilityIssueRepository.findByScanId(scanId);
+        List<AccessibilityIssueEntity> entities = jpaAccessibilityIssueRepository.findByScanIdOrderByIdAsc(scanId);
         return accessibilityIssuePersistenceMapper.toDomainList(entities);
     }
 

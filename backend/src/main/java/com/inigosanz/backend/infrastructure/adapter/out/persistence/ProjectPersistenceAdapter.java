@@ -30,7 +30,7 @@ public class ProjectPersistenceAdapter implements ProjectRepositoryPort {
 
     @Override
     public List<Project> findAll() {
-        return jpaProjectRepository.findAll()
+        return jpaProjectRepository.findAllByOrderByCreatedAtDescIdDesc()
                 .stream()
                 .map(projectPersistenceMapper::toDomain)
                 .toList();

@@ -177,6 +177,22 @@ class ScanServiceTest {
     }
 
     @Test
+    void shouldReturnScanByIdWhenFinishedAtIsNull() {
+        Long scanId = 2L;
+        LocalDateTime startedAt = LocalDateTime.now();
+        Scan scan = new Scan(scanId, 1L, ScanStatus.RUNNING, startedAt, null);
+
+        when(scanRepositoryPort.findById(scanId)).thenReturn(Optional.of(scan));
+
+        Scan result = scanService.findById(scanId);
+
+        verify(scanRepositoryPort, times(1)).findById(scanId);
+        assertSame(scan, result);
+        assertEquals(ScanStatus.RUNNING, result.getStatus());
+        assertEquals(startedAt, result.getStartedAt());
+    }
+
+    @Test
     void shouldThrowScanNotFoundWhenScanDoesNotExist() {
         Long scanId = 999L;
         when(scanRepositoryPort.findById(scanId)).thenReturn(Optional.empty());

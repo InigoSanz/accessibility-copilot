@@ -27,7 +27,7 @@ public class ScanPersistenceAdapter implements ScanRepositoryPort {
 
     @Override
     public List<Scan> findByProjectId(Long projectId) {
-        return jpaScanRepository.findByProjectId(projectId)
+        return jpaScanRepository.findByProjectIdOrderByStartedAtDescIdDesc(projectId)
                 .stream()
                 .map(scanPersistenceMapper::toDomain)
                 .toList();

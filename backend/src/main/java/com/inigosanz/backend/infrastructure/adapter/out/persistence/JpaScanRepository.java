@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface JpaScanRepository extends JpaRepository<ScanEntity, Long> {
 
-    List<ScanEntity> findByProjectId(Long projectId);
+    List<ScanEntity> findByProjectIdOrderByStartedAtDescIdDesc(Long projectId);
 }
