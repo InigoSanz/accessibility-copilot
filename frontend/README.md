@@ -1,102 +1,86 @@
-# AccessibilityCopilotWeb
+# Accessibility Copilot - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.1.
+Frontend de **auditoría de accesibilidad web** construido con Angular 21. Permite crear proyectos, lanzar escaneos, revisar histórico y analizar issues de accesibilidad con guía de remediación.
 
-## Development server
+## Qué hace
 
-To start a local development server, run:
+- Lista y crea proyectos de auditoría.
+- Lanza escaneos desde el frontend contra el backend.
+- Visualiza detalle de escaneo, resumen por severidad e issues detectados.
+- Incluye guía WCAG para contextualizar hallazgos.
+- Soporta internacionalización (`es` / `en`) con carga runtime de traducciones.
 
-```bash
-ng serve
-```
+## Stack y enfoque técnico
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Angular 21 (standalone components + lazy routes + OnPush en páginas).
+- TypeScript estricto + RxJS para orquestación de flujos.
+- Cliente API **generado desde OpenAPI** (fuente de verdad en `api/openapi.json`).
+- Arquitectura por features (`projects`, `scans`, `issues`) y servicios de dominio en `src/app/core/services`.
+- Estilos con SCSS y layout responsive básico.
 
-## Code scaffolding
+## Estructura principal
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- `src/app/features/projects`: listado de proyectos y detalle.
+- `src/app/features/scans`: histórico y detalle de escaneos.
+- `src/app/core/services`: integración con cliente generado.
+- `src/app/api-client`: SDK generado de OpenAPI (no editar manualmente).
+- `public/i18n`: traducciones runtime.
 
-```bash
-ng generate component component-name
-```
+## Requisitos
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- Node.js 20+
+- npm 10+
+- Backend en ejecución (por defecto `http://localhost:8080`)
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Ejecutar en local
 
 ```bash
-ng test
+npm install
+npm run start
 ```
 
-## Running end-to-end tests
+Abre `http://localhost:4200`.
 
-For end-to-end (e2e) testing, run:
+## Configuración de API
 
-```bash
-ng e2e
-```
+- Entorno desarrollo: `src/environments/environment.ts`
+- Entorno producción: `src/environments/environment.production.ts`
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+La URL base se configura en `apiBaseUrl`.
 
-## OpenAPI contract sync
+## Contrato OpenAPI (flujo recomendado)
 
-The backend API contract is defined in `api/openapi.json` and is the source of truth for:
-
-- endpoints
-- HTTP methods
-- payloads and parameters
-- response schemas and field names
-
-This frontend uses the generated client in `src/app/api-client`.
-
-Available scripts:
+Este frontend **no inventa endpoints**: consume el contrato del backend.
 
 ```bash
 npm run api:pull
-```
-
-Pulls the latest contract from `http://localhost:8080/v3/api-docs` into `api/openapi.json`.
-
-```bash
 npm run api:generate
 ```
 
-Regenerates the Angular API client from `api/openapi.json` into `src/app/api-client`.
+O en un solo paso:
 
 ```bash
 npm run api:sync
 ```
 
-Runs both commands in sequence (`api:pull` + `api:generate`).
+Cuando cambie el backend, actualiza contrato + cliente y commitea ambos cambios.
 
-Recommended workflow:
+## Calidad
 
-1. Start backend locally.
-2. Run `npm run api:sync` after backend contract changes.
-3. Run `npm run build` (or `npm test`) to validate integration.
-4. Commit both `api/openapi.json` and generated client updates.
+```bash
+npm run test
+npm run build
+```
 
-Minimal CI recommendation:
+## Limitaciones actuales
 
-- Run `npm run api:generate` and fail if it creates uncommitted diffs.
-- This ensures the committed client is always aligned with `api/openapi.json`.
+- Sin autenticación/autorización (MVP).
+- Sin e2e automatizado en este repositorio.
+- La robustez de validación de URLs depende del backend.
 
-## Additional Resources
+## Roadmap sugerido
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- Añadir autenticación y vistas multiusuario.
+- Incorporar e2e (Playwright) para flujos críticos.
+- Añadir métricas históricas de accesibilidad por proyecto.
+- Publicar despliegue demo y capturas/gif para portfolio.
