@@ -14,9 +14,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlaywrightWebAccessibilityScannerAdapterTest {
 
+    private PlaywrightWebAccessibilityScannerAdapter createAdapter() {
+        ScannerSecurityProperties properties = new ScannerSecurityProperties();
+        ScanTargetSecurityPolicy securityPolicy = new ScanTargetSecurityPolicy(properties);
+        return new PlaywrightWebAccessibilityScannerAdapter(new ObjectMapper(), securityPolicy);
+    }
+
     @Test
     void shouldLoadLocalAxeScriptFromClasspathOnAdapterCreation() throws Exception {
-        PlaywrightWebAccessibilityScannerAdapter adapter = new PlaywrightWebAccessibilityScannerAdapter(new ObjectMapper());
+        PlaywrightWebAccessibilityScannerAdapter adapter = createAdapter();
 
         Field axeScriptField = PlaywrightWebAccessibilityScannerAdapter.class.getDeclaredField("axeScriptContent");
         axeScriptField.setAccessible(true);

@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/accessibility_copilot
-    username: accessibility
-    password: accessibility
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/accessibility_copilot}
+    username: ${SPRING_DATASOURCE_USERNAME:accessibility}
+    password: ${SPRING_DATASOURCE_PASSWORD:accessibility}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -15,4 +15,14 @@ spring:
     locations: classpath:db/migration
 
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
+
+app:
+  cors:
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:http://localhost:4200,http://localhost:5173}
+
+scanner:
+  security:
+    enforce-whitelist: ${SCANNER_SECURITY_ENFORCE_WHITELIST:false}
+    allowed-domains: ${SCANNER_SECURITY_ALLOWED_DOMAINS:}
+    block-private-networks: ${SCANNER_SECURITY_BLOCK_PRIVATE_NETWORKS:true}

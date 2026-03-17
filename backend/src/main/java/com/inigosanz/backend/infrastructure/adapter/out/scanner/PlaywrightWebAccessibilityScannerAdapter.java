@@ -37,14 +37,20 @@ public class PlaywrightWebAccessibilityScannerAdapter implements WebAccessibilit
 
     private final ObjectMapper objectMapper;
     private final String axeScriptContent;
+    private final ScanTargetSecurityPolicy scanTargetSecurityPolicy;
 
-    public PlaywrightWebAccessibilityScannerAdapter(ObjectMapper objectMapper) {
+    public PlaywrightWebAccessibilityScannerAdapter(
+            ObjectMapper objectMapper,
+            ScanTargetSecurityPolicy scanTargetSecurityPolicy
+    ) {
         this.objectMapper = objectMapper;
+        this.scanTargetSecurityPolicy = scanTargetSecurityPolicy;
         this.axeScriptContent = loadAxeScriptFromClasspath();
     }
 
     @Override
     public List<AccessibilityIssue> scan(Long scanId, String pageUrl) {
+        scanTargetSecurityPolicy.validateTarget(pageUrl);
         try (
                 Playwright playwright = Playwright.create();
                 Browser browser = createBrowser(playwright);

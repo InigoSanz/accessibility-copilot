@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/accessibility_copilot}
+    username: ${SPRING_DATASOURCE_USERNAME:accessibility}
+    password: ${SPRING_DATASOURCE_PASSWORD:accessibility}
+
+server:
+  port: ${SERVER_PORT:8080}
+
