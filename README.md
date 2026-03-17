@@ -1,18 +1,18 @@
 # Accessibility Copilot
 
-Plataforma full stack para auditar accesibilidad web sobre sitios publicos, lanzar escaneos automatizados y revisar incidencias WCAG desde una interfaz pensada para portfolio.
+Plataforma full stack para auditar accesibilidad web sobre sitios públicos, lanzar escaneos automatizados y revisar incidencias WCAG desde una interfaz pensada para portfolio.
 
-El proyecto combina una API en Spring Boot, un frontend en Angular y un motor de escaneo basado en Playwright + axe-core. Los resultados se persisten en PostgreSQL para mantener historico de proyectos, ejecuciones e incidencias detectadas.
+El proyecto combina una API en Spring Boot, un frontend en Angular y un motor de escaneo basado en Playwright + axe-core. Los resultados se persisten en PostgreSQL para mantener histórico de proyectos, ejecuciones e incidencias detectadas.
 
-Actualmente es un MVP funcional centrado en el flujo principal de auditoria: crear proyecto, lanzar scan, persistir resultados y revisar incidencias desde UI.
+Actualmente es un MVP funcional centrado en el flujo principal de auditoría: crear proyecto, lanzar scan, persistir resultados y revisar incidencias desde UI.
 
-## Que resuelve
+## Qué resuelve
 
-- Permite registrar proyectos con una URL raiz.
-- Ejecuta escaneos asincronos de accesibilidad sobre paginas publicas.
-- Detecta incidencias automaticas con axe-core.
-- Guarda resultados, resumen por severidad y detalle tecnico de cada issue.
-- Expone una UI donde revisar historico, estado del scan y guia de remediacion.
+- Permite registrar proyectos con una URL raíz.
+- Ejecuta escaneos asíncronos de accesibilidad sobre páginas públicas.
+- Detecta incidencias automáticas con axe-core.
+- Guarda resultados, resumen por severidad y detalle técnico de cada issue.
+- Expone una UI donde revisar histórico, estado del scan y guía de remediación.
 - Mantiene contrato API documentado con OpenAPI para sincronizar frontend y backend.
 
 ## Stack
@@ -31,19 +31,19 @@ Actualmente es un MVP funcional centrado en el flujo principal de auditoria: cre
 - Arquitectura por features: projects, scans e issues.
 - Rutas lazy y componentes standalone.
 - Cliente API generado desde OpenAPI en [frontend/src/app/api-client](frontend/src/app/api-client).
-- Internacionalizacion runtime en espanol e ingles.
+- Internacionalización runtime en español e inglés.
 
 ### Backend
 
 - Enfoque Ports and Adapters / Hexagonal.
 - Casos de uso en application, dominio desacoplado en domain e infraestructura en adapters.
 - Persistencia relacional con JPA + Flyway.
-- Escaneo asincrono para no bloquear la peticion HTTP que inicia el scan.
+- Escaneo asíncrono para no bloquear la petición HTTP que inicia el scan.
 
 ### Flujo principal
 
 1. El usuario crea un proyecto desde el frontend.
-2. El frontend llama al backend para lanzar un scan sobre la URL raiz del proyecto.
+2. El frontend llama al backend para lanzar un scan sobre la URL raíz del proyecto.
 3. El backend ejecuta Playwright en segundo plano, inyecta axe-core y recoge incidencias.
 4. Los resultados se almacenan en PostgreSQL.
 5. El frontend consulta detalle del scan, resumen por severidad e issues detectados.
@@ -51,24 +51,24 @@ Actualmente es un MVP funcional centrado en el flujo principal de auditoria: cre
 ## Funcionalidades actuales
 
 - Alta y listado de proyectos.
-- Ejecucion de scans asincronos.
-- Historico de scans por proyecto.
+- Ejecución de scans asíncronos.
+- Histórico de scans por proyecto.
 - Vista global de historial con filtros por proyecto y estado.
-- Detalle de scan con polling mientras la ejecucion sigue en curso.
-- Visualizacion de issues con severidad, criterio WCAG, selector, snippet HTML y recomendacion.
-- Guia WCAG integrada en frontend.
+- Detalle de scan con polling mientras la ejecución sigue en curso.
+- Visualización de issues con severidad, criterio WCAG, selector, snippet HTML y recomendación.
+- Guía WCAG integrada en frontend.
 - Soporte i18n es/en.
-- Documentacion OpenAPI y Swagger UI en backend.
-- Politica basica de seguridad para evitar destinos inseguros en el escaneo.
+- Documentación OpenAPI y Swagger UI en backend.
+- Política básica de seguridad para evitar destinos inseguros en el escaneo.
 
 ## Estructura del workspace
 
 ```text
 .
 |-- backend/      API REST, persistencia, seguridad de escaneo y motor Playwright + axe-core
-|-- frontend/     Aplicacion Angular para gestionar proyectos, scans e incidencias
-|-- docs/         Documentacion general del workspace
-|-- infra/        Infraestructura adicional y experimentacion
+|-- frontend/     Aplicación Angular para gestionar proyectos, scans e incidencias
+|-- docs/         Documentación general del workspace
+|-- infra/        Infraestructura adicional y experimentación
 `-- scanner-worker/ soporte futuro / trabajo auxiliar del scanner
 ```
 
@@ -81,7 +81,7 @@ Actualmente es un MVP funcional centrado en el flujo principal de auditoria: cre
 - npm 10+
 - Docker y Docker Compose
 
-### Opcion recomendada: levantar PostgreSQL y backend con Docker
+### Opción recomendada: levantar PostgreSQL y backend con Docker
 
 Desde [backend](backend):
 
@@ -104,9 +104,9 @@ npm install
 npm run start
 ```
 
-La aplicacion queda disponible en http://localhost:4200.
+La aplicación queda disponible en http://localhost:4200.
 
-### Opcion alternativa: backend local fuera de Docker
+### Opción alternativa: backend local fuera de Docker
 
 Si prefieres ejecutar la API localmente, el backend espera PostgreSQL y usa por defecto:
 
@@ -142,7 +142,7 @@ O en un solo paso:
 npm run api:sync
 ```
 
-## Calidad y validacion
+## Calidad y validación
 
 ### Backend
 
@@ -157,7 +157,7 @@ Incluye:
 - Tests.
 - Checkstyle.
 - SpotBugs.
-- JaCoCo con umbral minimo de cobertura.
+- JaCoCo con umbral mínimo de cobertura.
 
 ### Frontend
 
@@ -170,11 +170,11 @@ npm run build
 
 ## Seguridad de escaneo
 
-El backend incorpora una politica minima para reducir riesgo SSRF en el escaneo:
+El backend incorpora una política mínima para reducir riesgo SSRF en el escaneo:
 
 - Solo permite URLs http/https.
 - Puede forzar allowlist de dominios.
-- Bloquea localhost, loopback y redes privadas cuando la proteccion esta activa.
+- Bloquea localhost, loopback y redes privadas cuando la protección está activa.
 
 Variables relevantes:
 
@@ -182,43 +182,43 @@ Variables relevantes:
 - SCANNER_SECURITY_ALLOWED_DOMAINS
 - SCANNER_SECURITY_BLOCK_PRIVATE_NETWORKS
 
-## Puntos tecnicos destacables para publicacion
+## Puntos técnicos destacables para publicación
 
-- Proyecto full stack con separacion clara entre UI, API, persistencia y motor de escaneo.
-- Integracion real con PostgreSQL y migraciones versionadas por Flyway.
-- Cliente Angular generado desde OpenAPI para evitar desalineacion entre frontend y backend.
-- Enfoque pragmatico de accesibilidad: no solo detecta issues, tambien ofrece contexto y guia de remediacion.
-- Base preparada para evolucionar a autenticacion, multiusuario, colas de trabajo y analitica historica.
+- Proyecto full stack con separación clara entre UI, API, persistencia y motor de escaneo.
+- Integración real con PostgreSQL y migraciones versionadas por Flyway.
+- Cliente Angular generado desde OpenAPI para evitar desalineación entre frontend y backend.
+- Enfoque pragmático de accesibilidad: no solo detecta issues, también ofrece contexto y guía de remediación.
+- Base preparada para evolucionar a autenticación, multiusuario, colas de trabajo y analítica histórica.
 
 ## Demo y material para LinkedIn
 
 En [backend/docs/evidence/README.md](backend/docs/evidence/README.md) tienes un guion corto para grabar una demo mostrando:
 
-1. Creacion de proyecto.
+1. Creación de proyecto.
 2. Lanzamiento de scan.
 3. Cambio de estado RUNNING a COMPLETED o FAILED.
-4. Visualizacion de issues y resumen por severidad.
-5. Cierre rapido con Swagger UI o logs.
+4. Visualización de issues y resumen por severidad.
+5. Cierre rápido con Swagger UI o logs.
 
-## Documentacion adicional
+## Documentación adicional
 
-- [backend/README.md](backend/README.md): detalle tecnico del backend.
-- [frontend/README.md](frontend/README.md): detalle tecnico del frontend.
+- [backend/README.md](backend/README.md): detalle técnico del backend.
+- [frontend/README.md](frontend/README.md): detalle técnico del frontend.
 - [frontend/docs/design-system.md](frontend/docs/design-system.md): sistema visual del frontend.
 
 ## Limitaciones actuales
 
-- No hay autenticacion ni control de acceso.
-- El escaneo esta orientado a MVP y puede ampliarse con colas, retry y politicas mas avanzadas.
+- No hay autenticación ni control de acceso.
+- El escaneo está orientado a MVP y puede ampliarse con colas, retry y políticas más avanzadas.
 - No hay e2e automatizado en este repo.
-- El despliegue productivo no esta documentado todavia.
+- El despliegue productivo no está documentado todavía.
 
-## Evolucion futura
+## Evolución futura
 
-Las siguientes lineas no estan implementadas todavia; son mejoras naturales para una siguiente iteracion del proyecto.
+Las siguientes líneas no están implementadas todavía; son mejoras naturales para una siguiente iteración del proyecto.
 
-- Autenticacion y multiusuario.
-- Dashboard con metricas historicas por proyecto.
+- Autenticación y multiusuario.
+- Dashboard con métricas históricas por proyecto.
 - Cola de trabajos y control de concurrencia para scans.
-- E2E con Playwright para flujos criticos.
+- E2E con Playwright para flujos críticos.
 - Demo desplegada y capturas/GIF embebidas en el README.
